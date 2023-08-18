@@ -1,5 +1,5 @@
 <template>
-  <UCard class="lg:w-1/2">
+  <UCard class="w-full lg:w-1/2">
     <template #header>
       <div class="flex items-center">
         <NuxtLink :href="`/users/${comment.expand?.author.id}`">

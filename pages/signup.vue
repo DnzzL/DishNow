@@ -72,10 +72,15 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: "unlogged",
+});
+
 import { signup } from "~/utils/pocketbase";
 
 const nuxtApp = useNuxtApp();
 const router = useRouter();
+const toast = useToast();
 
 const username = ref("");
 const fname = ref("");
@@ -91,11 +96,19 @@ async function handleSubmit() {
       passwordConfirm: passwordConfirm.value,
       name: fname.value,
     });
+    toast.add({
+      title: "Compte créé",
+      description: "Vous pouvez maintenant vous connecter",
+      icon: "i-tabler-circle-check",
+      color: "green",
+    });
     router.push("/login");
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
+  } catch (error: any) {
+    toast.add({
+      title: "Une erreur est survenue",
+      description: error.data.message,
+      icon: "i-tabler-circle-x",
+    });
   }
 }
 </script>

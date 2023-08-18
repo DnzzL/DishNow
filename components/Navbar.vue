@@ -10,7 +10,7 @@
             class="block px-1 pt-1 pb-1"
             :class="[pathname === path ? 'text-primary' : '']"
           >
-            <Icon :name="`tabler:${iconName}`" />
+            <UIcon :name="iconName" />
             <span class="block text-xs pb-2">{{ name }}</span>
             <span
               class="block w-5 mx-auto h-1 group-hover:bg-primary rounded-full"
@@ -23,30 +23,29 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute();
+const pathname = route.path;
+
 const paths = [
   {
     path: "/",
     name: "Home",
-    iconName: "home",
+    iconName: "i-tabler-home",
   },
   {
     path: "/search",
     name: "Search",
-    iconName: "search",
+    iconName: "i-tabler-search",
   },
   {
     path: "/recipes",
     name: "Recipes",
-    iconName: "bookmark",
+    iconName: "i-tabler-bookmark",
   },
   {
     path: "/profile",
     name: "Profile",
-    iconName: "user",
+    iconName: "i-tabler-user",
   },
 ];
-
-defineProps<{
-  pathname: string;
-}>();
 </script>

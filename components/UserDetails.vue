@@ -42,6 +42,7 @@ import { getImageUrl, logout } from "~/utils/pocketbase";
 
 const nuxtApp = useNuxtApp();
 const router = useRouter();
+const toast = useToast();
 
 type Props = {
   user: UsersResponse;
@@ -57,6 +58,12 @@ const avatarUrl = await getImageUrl(
 
 function handleLogout() {
   logout(nuxtApp.$pb);
+  toast.add({
+    title: "Déconnexion réussie",
+    description: "Vous êtes maintenant déconnecté.",
+    icon: "i-tabler-user-off",
+    color: "green",
+  });
   router.push("/login");
 }
 </script>

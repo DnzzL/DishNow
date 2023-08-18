@@ -46,12 +46,16 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: "unlogged",
+});
+
 import { ClientResponseError } from "pocketbase";
 import { login } from "~/utils/pocketbase";
 
 const router = useRouter();
+const toast = useToast();
 
-let formError = "";
 const username = ref("");
 const password = ref("");
 
@@ -64,8 +68,11 @@ async function handleSubmit() {
     router.push("/");
   } catch (error) {
     if (error instanceof ClientResponseError) {
-      console.error(error.message);
-      formError = error.message;
+      toast.add({
+        title: "Une erreur est survenue",
+        description: error.data.message,
+        icon: "i-tabler-circle-x",
+      });
     }
   }
 }

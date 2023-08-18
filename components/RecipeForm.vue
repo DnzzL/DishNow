@@ -6,14 +6,14 @@
       v-if="state.value?.enteringOrigin"
     />
     <RecipeFormStepTwo
-      :pb="pb"
+      :pb="nuxtApp.$pb"
       :origin="origin"
-      :fetchedIngredients="ingredients"
-      :fetchedInstructions="instructions"
+      :partialRecipe="partialRecipe!"
       @submit="handleStepTwoSubmit"
       v-if="state.value?.enteringContent === 'idle'"
     />
     <RecipeFormStepThree
+      :fetchedThumbnailUrl="partialRecipe?.thumbnailUrl"
       @submit="handleStepThreeSubmit"
       v-if="state.value?.enteringMedia === 'idle'"
     />
@@ -23,14 +23,16 @@
       type="button"
       v-if="state.value?.enteringOrigin !== 'idle'"
     >
-      <Icon name="tabler:arrow-left" />
+      <UIcon name="i-tabler-arrow-left" />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import PocketBase from "pocketbase";
+import { useMachine } from "@xstate/vue";
 import { ref } from "vue";
+import { useDb } from "~/composables/db";
+import newRecipeFormMachine from "~/machines/newRecipeForm";
 import type { RecipesRecord, RecipesResponse } from "~/types/pocketbase";
 import { createRecord } from "~/utils/pocketbase";
 import type { StepOneOutput } from "./RecipeFormStepOne.vue";
@@ -41,13 +43,15 @@ import RecipeFormStepThree, {
 import type { StepTwoOutput } from "./RecipeFormStepTwo.vue";
 import RecipeFormStepTwo from "./RecipeFormStepTwo.vue";
 
-const pb = new PocketBase("http://127.0.0.1:8090");
-
-import { useMachine } from "@xstate/vue";
-
-import newRecipeFormMachine from "~/machines/newRecipeForm";
-
 const { state, send } = useMachine(newRecipeFormMachine);
+
+const nuxtApp = useNuxtApp();
+const toast = useToast();
+const { createIngredients, createInstructions, createTags } = useDb();
+
+const emit = defineEmits<{
+  (e: "done"): void;
+}>();
 
 const origin = ref("");
 const url = ref<string>();
@@ -69,9 +73,8 @@ async function handleStepOneSubmit({
   try {
     url.value = stepOneUrl;
     origin.value = stepOneOrigin;
-    let partialRecipe;
     if (stepOneOrigin === "external") {
-      partialRecipe = await fetchRecipe();
+      partialRecipe.value = await fetchRecipe();
       if (!!partialRecipe) {
         title.value = partialRecipe.value?.title ?? "";
         servings.value = partialRecipe.value?.servings ?? 0;
@@ -82,51 +85,68 @@ async function handleStepOneSubmit({
     send("CONFIRM_ORIGIN", {
       origin: stepOneOrigin,
       url: stepOneUrl,
-      recipe: partialRecipe?.value,
+      recipe: partialRecipe.value,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    toast.add({
+      title: "Erreur",
+      description: err.data.message,
+      icon: "i-tabler-circle-x",
+    });
   }
 }
 
 async function fetchRecipe() {
   try {
-    const { data: recipe } = await useFetch("/api/marmiton");
+    const recipe = $fetch("/api/marmiton", {
+      method: "POST",
+      body: JSON.stringify({ url: url.value }),
+    });
     return recipe;
   } catch (err) {
     console.log(err);
   }
 }
 
-function handleStepTwoSubmit({
+async function handleStepTwoSubmit({
   title: stepTwoTitle,
   servings: stepTwoServings,
   totalTime: stepTwoTotalTime,
-  ingredientIds: stepTwoIngredientIds,
-  instructionIds: stepTwoInstructionIds,
-  tagIds: stepTwoTags,
+  ingredients: stepTwoIngredientIds,
+  instructions: stepTwoInstructionIds,
+  tags: stepTwoTags,
 }: StepTwoOutput) {
-  title.value = stepTwoTitle;
-  servings.value = stepTwoServings;
-  totalTime.value = stepTwoTotalTime;
-  ingredientIds.value = stepTwoIngredientIds;
-  instructionIds.value = stepTwoInstructionIds;
-  tagIds.value = stepTwoTags;
+  try {
+    const createdIngredients = await createIngredients(stepTwoIngredientIds);
+    const createdInstructions = await createInstructions(stepTwoInstructionIds);
+    const tagIds = await createTags(stepTwoTags);
 
-  send("CONFIRM_CONTENT", {
-    title: stepTwoTitle,
-    servings: stepTwoServings,
-    totalTime: stepTwoTotalTime,
-    ingredientIds: stepTwoIngredientIds,
-    instructionIds: stepTwoInstructionIds,
-    tagIds: stepTwoTags,
-  });
-  console.log(state.value.context);
+    title.value = stepTwoTitle;
+    servings.value = stepTwoServings;
+    totalTime.value = stepTwoTotalTime;
+    ingredientIds.value = createdIngredients;
+    instructionIds.value = createdInstructions;
+
+    send("CONFIRM_CONTENT", {
+      title: stepTwoTitle,
+      servings: stepTwoServings,
+      totalTime: stepTwoTotalTime,
+      ingredientIds,
+      instructionIds,
+      tagIds,
+    });
+  } catch (err: any) {
+    toast.add({
+      title: "Erreur",
+      description: err.data.message,
+      icon: "i-tabler-circle-x",
+    });
+  }
 }
 
 async function createRecipe(recipe: RecipesRecord): Promise<RecipesResponse> {
   const createdRecipe = await createRecord<RecipesResponse>(
-    pb,
+    nuxtApp.$pb,
     "recipes",
     recipe
   );
@@ -140,7 +160,7 @@ async function handleStepThreeSubmit({
     send("CONFIRM_MEDIA", { thumbnail: stepThreeThumbnail });
 
     const recipe = {
-      author: pb.authStore.model?.id!,
+      author: nuxtApp.$pb.authStore.model?.id!,
       title: title.value,
       servings: servings.value,
       ingredients: ingredientIds.value,
@@ -148,16 +168,21 @@ async function handleStepThreeSubmit({
       tags: tagIds.value,
       totalTime: totalTime.value,
       thumbnail: stepThreeThumbnail,
+      thumbnailUrl: partialRecipe.value?.thumbnailUrl,
     };
 
-    const formData = new FormData();
-    for (const [key, value] of Object.entries(recipe)) {
-      if (!!value) {
-        formData.append(key, value.toString());
-      }
-    }
+    // const formData = new FormData();
+    // for (const [key, value] of Object.entries(payload)) {
+    //   formData.append(key, value);
+    // }
 
-    const createdRecipe = await createRecipe(formData as any as RecipesRecord);
+    const createdRecipe = await createRecipe(recipe as any as RecipesRecord);
+    toast.add({
+      title: "Recette créée",
+      description: `Votre recette de ${createdRecipe.title} a bien été créée`,
+      icon: "i-tabler-circle-check",
+      color: "green",
+    });
   } catch (err) {
     console.log(err);
   }

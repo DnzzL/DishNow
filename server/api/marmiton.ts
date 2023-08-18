@@ -9,24 +9,25 @@ export default defineEventHandler(async (event) => {
 
   const match = re.exec(url);
   if (!match) {
-    throw new Error("Invalid URL");
+    throw createError({
+      statusCode: 400,
+      statusMessage: "URL invalide",
+    });
   }
   const apiUrl = `${root}/${match[0]}`;
   const response = await fetch(apiUrl);
   const marmitonRecipe = (await response.json()) as MarmitonRecipe;
 
   if (!marmitonRecipe) {
-    throw new Error("No data");
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Pas de données trouvées",
+    });
   }
   const ingredients = marmitonRecipe.ingredientGroups
     .flatMap((group) => group.items)
     .map((item) => item.name.toLowerCase());
-  const instructions = marmitonRecipe.steps.map((step) => {
-    return {
-      text: step.text,
-      position: step.position,
-    };
-  });
+  const instructions = marmitonRecipe.steps.map((step) => step.text);
 
   const rawResponse = await fetch(url);
   const content = await rawResponse.text();
@@ -41,7 +42,7 @@ export default defineEventHandler(async (event) => {
     servings: marmitonRecipe.servings.count,
     thumbnailUrl: ogImage,
     title: marmitonRecipe.title,
-    totalTime: marmitonRecipe.totalTime,
+    totalTime: Math.round(marmitonRecipe.totalTime / 60),
     type: marmitonRecipe.categories[0]?.name as RecipesTypeOptions,
   };
 

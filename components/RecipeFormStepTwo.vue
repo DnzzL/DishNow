@@ -81,74 +81,50 @@
 
 <script setup lang="ts">
 import type Pocketbase from "pocketbase";
-import { computed, ref, watch } from "vue";
-import type {
-  IngredientsRecord,
-  InstructionsRecord,
-  InstructionsResponse,
-  TagsRecord,
-} from "~/types/pocketbase";
-import { createIfNotExists, createRecord } from "~/utils/pocketbase";
+import { ref } from "vue";
+import type { RecipesRecord } from "~/types/pocketbase";
 import DynamicSizeList from "./DynamicSizeList.vue";
 import TagsInput from "./TagsInput.vue";
 
 const ingredients = ref<string[]>([]);
 const instructions = ref<string[]>([]);
 
-const props = withDefaults(
-  defineProps<{
-    origin: string;
-    pb: Pocketbase;
-    fetchedIngredients?: string[];
-    fetchedInstructions?: string[];
-  }>(),
-  {
-    fetchedIngredients: [] as any,
-    fetchedInstructions: [] as any,
-  }
-);
+const props = defineProps<{
+  origin: string;
+  pb: Pocketbase;
+  partialRecipe: Partial<RecipesRecord>;
+}>();
 
-watch(
-  () => props.fetchedIngredients,
-  () => {
-    ingredients.value = props.fetchedIngredients || [];
-    ingredientRange.value = props.fetchedIngredients?.length || 0;
-  }
-);
-
-watch(
-  () => props.fetchedInstructions,
-  () => {
-    instructions.value =
-      props.fetchedInstructions?.map((instruction) => instruction!.text) || [];
-    instructionRange.value = props.fetchedInstructions?.length || 0;
-  }
-);
+onMounted(() => {
+  title.value = props.partialRecipe.title || "";
+  servings.value = props.partialRecipe.servings || 0;
+  totalTime.value = props.partialRecipe.totalTime || 0;
+  ingredients.value = props.partialRecipe.ingredients || [];
+  ingredientRange.value = props.partialRecipe.ingredients?.length - 1 || 0;
+  instructions.value = props.partialRecipe.instructions || [];
+  instructionRange.value = props.partialRecipe.instructions?.length - 1 || 0;
+  tags.value = props.partialRecipe.tags || [];
+});
 
 const title = ref("");
 const servings = ref(0);
 const totalTime = ref(0);
 const ingredientRange = ref(0);
-const ingredientIdList = ref<string[]>([]);
 const instructionRange = ref(0);
-const instructionIdList = ref<string[]>([]);
 const tags = ref<string[]>([]);
-const tagIdList = ref<string[]>([]);
 
 export type StepTwoOutput = {
   title: string;
   servings: number;
   totalTime: number;
-  ingredientIds: string[];
-  instructionIds: string[];
-  tagIds: string[];
+  ingredients: string[];
+  instructions: string[];
+  tags: string[];
 };
 
 const emit = defineEmits<{
   (e: "submit", output: StepTwoOutput): void;
 }>();
-
-const isExternal = computed(() => props.origin === "external");
 
 function handleIngredientChange(id: number, evt: Event) {
   const target = evt.target as HTMLInputElement;
@@ -160,73 +136,15 @@ function handleInstructionChange(id: number, evt: Event) {
   instructions.value[id - 1] = target.value;
 }
 
-async function createIngredients(ingredientNames: string[]): Promise<string[]> {
-  let ingredientIds: string[] = [];
-  for (const ingredient of ingredientNames) {
-    const createdIngredientId = await createIfNotExists<IngredientsRecord>(
-      props.pb!,
-      "ingredients",
-      `name="${ingredient}"`,
-      {
-        name: ingredient,
-      }
-    );
-    ingredientIds.push(createdIngredientId);
-  }
-  return ingredientIds;
-}
-
-async function createInstructions(
-  instructionTexts: string[]
-): Promise<string[]> {
-  let instructionIds: string[] = [];
-  for (const [i, instruction] of instructionTexts.entries()) {
-    const createdInstruction = await createRecord<InstructionsResponse>(
-      props.pb!,
-      "instructions",
-      {
-        text: instruction,
-        position: i + 1,
-      } as InstructionsRecord
-    );
-    instructionIds.push(createdInstruction.id);
-  }
-  return instructionIds;
-}
-
-async function createTags(tagNames: string[]): Promise<string[]> {
-  let tagIds: string[] = [];
-  for (const tag of tagNames) {
-    const createdTagId = await createIfNotExists<TagsRecord>(
-      props.pb!,
-      "tags",
-      `text="${tag}"`,
-      {
-        text: tag,
-      }
-    );
-    tagIds.push(createdTagId);
-  }
-  return tagIds;
-}
-
 const submit = async () => {
   try {
-    const ingredientIds = await createIngredients(ingredients.value);
-    const instructionIds = await createInstructions(instructions.value);
-    const tagIds = await createTags(tags.value);
-
-    ingredientIdList.value = ingredientIds;
-    instructionIdList.value = instructionIds;
-    tagIdList.value = tagIds;
-
     emit("submit", {
       title: title.value,
       servings: servings.value,
       totalTime: totalTime.value,
-      tagIds,
-      ingredientIds,
-      instructionIds,
+      tags: tags.value,
+      ingredients: ingredients.value,
+      instructions: instructions.value,
     });
   } catch (err) {
     console.log(err);
