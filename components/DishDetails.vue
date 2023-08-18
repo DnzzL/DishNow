@@ -1,19 +1,18 @@
 <template>
   <div class="p-6">
-    <h2 class="text-xl font-medium">{{ dish.title }}</h2>
+    <h2 class="text-3xl font-medium">{{ dish.title }}</h2>
     <div class="flex items-center space-x-2 mt-2">
-      <div class="flex items-center space-x-1">
+      <div class="flex items-center flex-col gap-2">
         <span class="text-gray-600"
           >{{ dish.expand?.recipe.servings }} servings</span
         >
-      </div>
-      <div class="flex items-center space-x-1">
-        <div class="mt-2">
-          <p class="text-gray-600">Tags: {{ tagContent }}</p>
-          <p class="text-gray-600">
-            Rating: {{ dish.expand?.recipe.expand?.rating?.stars }}/5
-          </p>
-        </div>
+        <span class="text-gray-600" v-if="tagContent?.length > 0"
+          >Tags: {{ tagContent }}</span
+        >
+        <RatingDisplay
+          :stars="dish.expand?.recipe.expand?.rating?.stars"
+          v-if="dish.expand?.recipe.expand?.rating?.stars"
+        />
       </div>
     </div>
     <div class="mt-4">
@@ -27,7 +26,7 @@
           v-for="(media, i) in dish.media"
         >
           <img
-            :src="getDishImageUrl(media)"
+            :src="mediaUrl"
             alt="Dish Media"
             class="object-cover w-full h-full rounded-lg"
           />
@@ -70,11 +69,15 @@ const props = defineProps<{
   comments: CommentsResponse<{ author: UsersResponse }>[];
 }>();
 
-async function getDishImageUrl(media: string) {
-  return await getImageUrl(nuxtApp.$pb, props.dish, media);
-}
-
 const tagContent = computed(() => {
-  props.dish.expand?.recipe.expand?.tags?.map((tag) => tag.text).join(", ");
+  return props.dish.expand?.recipe.expand?.tags
+    ?.map((tag) => tag.text)
+    .join(", ");
 });
+
+const mediaUrl = await getImageUrl(
+  nuxtApp.$pb,
+  props.dish,
+  props.dish.media[0]
+);
 </script>

@@ -4,7 +4,7 @@
       <h1 class="text-4xl font-cal font-bold mt-2 mb-5">Mes recettes</h1>
       <UButton icon="i-tabler-plus" variant="soft" @click="isOpen = true" />
     </div>
-    <UModal v-model="isOpen" @click="handleModalOpen">
+    <UModal v-model="isOpen">
       <div class="py-4">
         <RecipeForm @done="isOpen = false" />
       </div>
@@ -29,11 +29,9 @@ const isOpen = ref(false);
 const { data: recipes } = await useAsyncData(async (nuxtApp) => {
   const records = (await nuxtApp!.$pb
     .collection("recipes")
-    .getFullList<RecipesResponse>()) as RecipesResponse[];
+    .getFullList<RecipesResponse>({
+      sort: "-created",
+    })) as RecipesResponse[];
   return structuredClone(records);
 });
-
-function handleModalOpen() {
-  isOpen.value = true;
-}
 </script>

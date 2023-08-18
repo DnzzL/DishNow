@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  modules: ["nuxt-icon", "@nuxthq/ui"],
+  modules: ["@nuxthq/ui", "@vueuse/nuxt"],
   ui: {
     icons: ["tabler"],
   },

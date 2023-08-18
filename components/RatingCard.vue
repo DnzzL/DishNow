@@ -23,23 +23,7 @@
     <template #default>
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-medium">{{ rating.expand?.recipe.title }}</h2>
-        <div class="flex items-center space-x-2">
-          <div class="rating" v-for="(_, i) in Array.from({ length: 5 })">
-            <input
-              type="radio"
-              name="rating-2"
-              class="mask mask-star-2 bg-orange-300"
-              checked
-              v-if="i < rating.stars"
-            />
-            <input
-              type="radio"
-              name="rating-2"
-              class="mask mask-star-2 bg-gray-300"
-              v-else
-            />
-          </div>
-        </div>
+        <RatingDisplay :stars="rating.stars" />
       </div>
       <div class="mt-4 text-gray-600 text-sm">{{ rating.details }}</div>
     </template>
