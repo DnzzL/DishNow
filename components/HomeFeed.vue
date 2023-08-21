@@ -96,37 +96,31 @@ const { data: ratings } = await useAsyncData(async (nuxtApp) => {
 });
 
 const feedItems = computed(() => {
-  return dishes.value &&
-    comments.value &&
-    likes.value &&
-    ratings.value &&
-    likes.value
-    ? ([
-        ...dishes.value!.map((dish) => ({
-          id: dish.id,
-          type: Collections.Dishes as FeedItemType,
-          data: dish satisfies DishesResponse,
-        })),
-        ...comments.value!.map((comment) => ({
-          id: comment.id,
-          type: Collections.Comments as FeedItemType,
-          data: comment,
-        })),
-        ...likes.value!.map((like) => ({
-          id: like.id,
-          type: Collections.Likes as FeedItemType,
-          data: like,
-        })),
-        ...ratings.value!.map((rating) => ({
-          id: rating.id,
-          type: Collections.Ratings as FeedItemType,
-          data: rating,
-        })),
-      ].sort(
-        (a, b) =>
-          new Date(a.data.created).getUTCMilliseconds() -
-          new Date(b.data.created).getUTCMilliseconds()
-      ) as FeedItem[])
-    : [];
+  return [
+    ...dishes.value!.map((dish) => ({
+      id: dish.id,
+      type: Collections.Dishes as FeedItemType,
+      data: dish satisfies DishesResponse,
+    })),
+    ...comments.value!.map((comment) => ({
+      id: comment.id,
+      type: Collections.Comments as FeedItemType,
+      data: comment,
+    })),
+    ...likes.value!.map((like) => ({
+      id: like.id,
+      type: Collections.Likes as FeedItemType,
+      data: like,
+    })),
+    ...ratings.value!.map((rating) => ({
+      id: rating.id,
+      type: Collections.Ratings as FeedItemType,
+      data: rating,
+    })),
+  ].sort((a, b) => {
+    return (
+      new Date(b.data.created).getTime() - new Date(a.data.created).getTime()
+    );
+  }) as FeedItem[];
 });
 </script>

@@ -74,18 +74,23 @@
 </template>
 
 <script setup lang="ts">
-import type { RecipesResponse } from "types/pocketbase";
+import type { DishesRecord, RecipesResponse } from "types/pocketbase";
 
 const { getImageUrl, getRecordList } = useDb();
 
 const searchQuery = ref("");
 const title = ref("");
 const description = ref("");
-const media = ref<File[]>([]);
+const media = ref<FileList>();
 
 const nuxtApp = useNuxtApp();
 const toast = useToast();
 const { createRecord } = useDb();
+const { castAsFormData } = useForm();
+
+const emit = defineEmits<{
+  (event: "done"): void;
+}>();
 
 const { data: suggestions } = await useAsyncData(
   async () => {
@@ -110,10 +115,10 @@ const selectedRecipe = computed(() => {
 });
 
 const numberFiles = computed(() => {
-  return media.value.length;
+  return media.value?.length ?? 0;
 });
 
-function handleMediaChange(files: File[]) {
+function handleMediaChange(files: FileList) {
   media.value = files;
 }
 
@@ -127,13 +132,16 @@ async function handleDishCreation() {
       author: nuxtApp.$pb.authStore.model?.id!,
     };
 
-    const createdDish = await createRecord<RecipesResponse>("dishes", dish);
+    const formData = castAsFormData(dish) as unknown as DishesRecord;
+
+    const createdDish = await createRecord<RecipesResponse>("dishes", formData);
     toast.add({
       title: "Plat créé",
       description: `Votre plat: ${createdDish.title} a bien été créée`,
-      icon: "i-tabler-chef-hat",
+      icon: "-chef-hat",
       color: "green",
     });
+    emit("done");
   } catch (err) {
     console.log(err);
   }

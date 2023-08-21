@@ -16,15 +16,4 @@ export default defineAppConfig({
       },
     },
   },
-  // app: {
-  //   head: {
-  //     script: [
-  //       {
-  //         hid: "flowbite",
-  //         src: "https://unpkg.com/flowbite@1.8.1/dist/flowbite.js",
-  //         defer: true,
-  //       },
-  //     ],
-  //   },
-  // },
 });

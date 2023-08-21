@@ -50,13 +50,13 @@ withDefaults(
 );
 
 const emit = defineEmits<{
-  (event: "files-changed", files: File[]): void;
+  (event: "files-changed", files: FileList): void;
 }>();
 
 function handleChange(event: Event) {
   const files = (event.target as HTMLInputElement).files;
   if (files) {
-    emit("files-changed", Array.from(files));
+    emit("files-changed", files);
   }
 }
 </script>
