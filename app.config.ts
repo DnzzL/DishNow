@@ -2,6 +2,7 @@ export default defineAppConfig({
   ui: {
     primary: "red",
     gray: "cool",
+    icons: ["tabler"],
     card: {
       divide: "",
       header: {
@@ -15,15 +16,15 @@ export default defineAppConfig({
       },
     },
   },
-  app: {
-    head: {
-      script: [
-        {
-          hid: "flowbite",
-          src: "https://unpkg.com/flowbite@1.8.1/dist/flowbite.js",
-          defer: true,
-        },
-      ],
-    },
-  },
+  // app: {
+  //   head: {
+  //     script: [
+  //       {
+  //         hid: "flowbite",
+  //         src: "https://unpkg.com/flowbite@1.8.1/dist/flowbite.js",
+  //         defer: true,
+  //       },
+  //     ],
+  //   },
+  // },
 });

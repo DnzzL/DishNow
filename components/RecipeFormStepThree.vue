@@ -34,7 +34,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import UploadBox from "./UploadBox.vue";
 
 defineProps<{
   fetchedThumbnailUrl: string | undefined;

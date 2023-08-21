@@ -3,6 +3,7 @@
     <div>{{ label }}</div>
     <div>
       <textarea
+        class="textarea textarea-bordered w-full"
         v-model="model"
         :rows="rows"
         :placeholder="placeholder"

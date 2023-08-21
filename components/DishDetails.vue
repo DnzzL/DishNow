@@ -44,6 +44,7 @@
           :key="comment.id"
           v-for="comment in comments"
         />
+        <TextAreaInput />
       </div>
     </div>
   </div>

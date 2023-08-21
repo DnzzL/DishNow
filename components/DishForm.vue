@@ -39,20 +39,29 @@
         class="input input-bordered"
       />
       <label for="img" class="label">Images</label>
-      <div class="flex flex-wrap">
-        <template v-for="file in media">
-          <div>
-            <img
-              :src="getImageUrl(nuxtApp.$pb, file)"
-              class="object-cover h-24"
-            />
-          </div>
-        </template>
+      <div class="flex flex-col w-full">
+        <ul v-if="numberFiles > 0" v-for="(thumbnail, i) in media">
+          <li :key="thumbnail.name">
+            <div class="flex justify-evenly items-center">
+              <p>{{ thumbnail.name }}</p>
+              <UButton
+                icon="i-tabler-trash-x"
+                size="sm"
+                variant="soft"
+                @click="media.splice(i, 1)"
+              />
+            </div>
+          </li>
+        </ul>
+        <UploadBox
+          @files-changed="handleMediaChange"
+          :max-files="3"
+          v-if="numberFiles < 3"
+        />
       </div>
       <p v-if="numberFiles > 0" class="text-gray-500">
         ({{ numberFiles }} / 3) files selected
       </p>
-      <DropZone class="w-full" @files-changed="handleMediaChange" />
       <button
         type="submit"
         @click="handleDishCreation"
@@ -75,9 +84,11 @@ const description = ref("");
 const media = ref<File[]>([]);
 
 const nuxtApp = useNuxtApp();
+const toast = useToast();
+const { createRecord } = useDb();
 
 const { data: suggestions } = await useAsyncData(
-  async (nuxtApp) => {
+  async () => {
     const records = (await getRecordList<RecipesResponse>("recipes", {
       page: 1,
       params: {
@@ -106,13 +117,25 @@ function handleMediaChange(files: File[]) {
   media.value = files;
 }
 
-function handleDishCreation() {
-  // mutate({
-  //   title: dishTitle.value,
-  //   description: dishDescription.value,
-  //   media: dishMedia.value as any,
-  //   recipe: recipeId!,
-  //   author: store.user?.id,
-  // });
+async function handleDishCreation() {
+  try {
+    const dish = {
+      title: title.value,
+      description: description.value,
+      media: media.value,
+      recipe: selectedRecipe.value?.id!,
+      author: nuxtApp.$pb.authStore.model?.id!,
+    };
+
+    const createdDish = await createRecord<RecipesResponse>("dishes", dish);
+    toast.add({
+      title: "Plat créé",
+      description: `Votre plat: ${createdDish.title} a bien été créée`,
+      icon: "i-tabler-chef-hat",
+      color: "green",
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
 </script>

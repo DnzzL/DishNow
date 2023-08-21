@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   modules: ["@nuxthq/ui", "@vueuse/nuxt"],
-  ui: {
-    icons: ["tabler"],
+  colorMode: {
+    preference: "light",
   },
 });
