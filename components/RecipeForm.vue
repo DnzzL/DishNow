@@ -47,6 +47,7 @@ const nuxtApp = useNuxtApp();
 const toast = useToast();
 const { createIngredients, createInstructions, createTags, createRecord } =
   useDb();
+const { castAsFormData } = useForm();
 
 const emit = defineEmits<{
   (e: "done"): void;
@@ -144,11 +145,7 @@ async function handleStepTwoSubmit({
 }
 
 async function createRecipe(recipe: RecipesRecord): Promise<RecipesResponse> {
-  const createdRecipe = await createRecord<RecipesResponse>(
-    nuxtApp.$pb,
-    "recipes",
-    recipe
-  );
+  const createdRecipe = await createRecord<RecipesResponse>("recipes", recipe);
   return createdRecipe;
 }
 
@@ -170,12 +167,9 @@ async function handleStepThreeSubmit({
       thumbnailUrl: partialRecipe.value?.thumbnailUrl,
     };
 
-    // const formData = new FormData();
-    // for (const [key, value] of Object.entries(payload)) {
-    //   formData.append(key, value);
-    // }
+    const formData = castAsFormData(recipe) as unknown as RecipesRecord;
 
-    const createdRecipe = await createRecipe(recipe as any as RecipesRecord);
+    const createdRecipe = await createRecipe(formData);
     toast.add({
       title: "Recette créée",
       description: `Votre recette de ${createdRecipe.title} a bien été créée`,
