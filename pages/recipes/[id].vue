@@ -8,8 +8,8 @@ import type {
   InstructionsResponse,
   RecipesResponse,
 } from "~/types/pocketbase";
-import { getRecordById } from "~/utils/pocketbase";
 
+const { getRecordById } = useDb();
 const route = useRoute();
 const id = route.params.id as string;
 
@@ -19,7 +19,7 @@ type Recipe = RecipesResponse<{
 }>;
 
 const { data: recipe } = await useAsyncData(async (nuxtApp) => {
-  const records = (await getRecordById<Recipe>(nuxtApp!.$pb, "recipes", id, {
+  const records = (await getRecordById<Recipe>("recipes", id, {
     expand: "ingredients,instructions",
   })) as Recipe;
   return structuredClone(records);

@@ -61,19 +61,14 @@
 <script setup lang="ts">
 import type { DishesResponse, UsersResponse } from "~/types/pocketbase";
 
-const nuxtApp = useNuxtApp();
+const { getImageUrl } = useDb();
 
 const props = defineProps<{
   dish: DishesResponse<{ author: UsersResponse }>;
 }>();
 
-const mediaUrl = await getImageUrl(
-  nuxtApp.$pb,
-  props.dish,
-  props.dish.media[0]
-);
+const mediaUrl = await getImageUrl(props.dish, props.dish.media[0]);
 const avatarUrl = await getImageUrl(
-  nuxtApp.$pb,
   props.dish.expand?.author,
   props.dish.expand?.author.avatar
 );

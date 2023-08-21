@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import type { RecipesResponse } from "types/pocketbase";
 
-import { getImageUrl } from "~/utils/pocketbase";
+const { getImageUrl, getRecordList } = useDb();
 
 const searchQuery = ref("");
 const title = ref("");
@@ -78,17 +78,13 @@ const nuxtApp = useNuxtApp();
 
 const { data: suggestions } = await useAsyncData(
   async (nuxtApp) => {
-    const records = (await getRecordList<RecipesResponse>(
-      nuxtApp!.$pb,
-      "recipes",
-      {
-        page: 1,
-        params: {
-          filter: `title ~ "${searchQuery.value}" || ingredients.name ?~ "${searchQuery.value}"`,
-          fields: "id,title,thumbnailUrl",
-        },
-      }
-    )) as RecipesResponse[];
+    const records = (await getRecordList<RecipesResponse>("recipes", {
+      page: 1,
+      params: {
+        filter: `title ~ "${searchQuery.value}" || ingredients.name ?~ "${searchQuery.value}"`,
+        fields: "id,title,thumbnailUrl",
+      },
+    })) as RecipesResponse[];
     return structuredClone(records);
   },
   {

@@ -31,10 +31,8 @@
 <script setup lang="ts">
 import { useMachine } from "@xstate/vue";
 import { ref } from "vue";
-import { useDb } from "~/composables/db";
 import newRecipeFormMachine from "~/machines/newRecipeForm";
 import type { RecipesRecord, RecipesResponse } from "~/types/pocketbase";
-import { createRecord } from "~/utils/pocketbase";
 import type { StepOneOutput } from "./RecipeFormStepOne.vue";
 import RecipeFormStepOne from "./RecipeFormStepOne.vue";
 import RecipeFormStepThree, {
@@ -47,7 +45,8 @@ const { state, send } = useMachine(newRecipeFormMachine);
 
 const nuxtApp = useNuxtApp();
 const toast = useToast();
-const { createIngredients, createInstructions, createTags } = useDb();
+const { createIngredients, createInstructions, createTags, createRecord } =
+  useDb();
 
 const emit = defineEmits<{
   (e: "done"): void;

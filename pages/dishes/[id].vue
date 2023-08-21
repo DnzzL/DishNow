@@ -11,8 +11,8 @@ import type {
   TagsResponse,
   UsersResponse,
 } from "~/types/pocketbase";
-import { getRecordById, getRecordFullList } from "~/utils/pocketbase";
 
+const { getRecordById, getRecordFullList } = useDb();
 const route = useRoute();
 const id = route.params.id as string;
 
@@ -21,7 +21,7 @@ type Dish = DishesResponse<{
 }>;
 
 const { data: dish } = await useAsyncData(async (nuxtApp) => {
-  const records = (await getRecordById<Dish>(nuxtApp!.$pb, "dishes", id, {
+  const records = (await getRecordById<Dish>("dishes", id, {
     expand: "recipe",
   })) as Dish;
   return structuredClone(records);
@@ -30,7 +30,7 @@ const { data: dish } = await useAsyncData(async (nuxtApp) => {
 type Comment = CommentsResponse<{ author: UsersResponse }>;
 
 const { data: comments } = await useAsyncData(async (nuxtApp) => {
-  const records = (await getRecordFullList<Comment>(nuxtApp!.$pb, "comments", {
+  const records = (await getRecordFullList<Comment>("comments", {
     filter: `dish.id = '${id}'`,
     expand: "author",
   })) as Comment[];

@@ -30,14 +30,13 @@
 <script setup lang="ts">
 import type { LikesResponse, UsersResponse } from "~/types/pocketbase";
 
-const nuxtApp = useNuxtApp();
+const { getImageUrl } = useDb();
 
 const props = defineProps<{
   like: LikesResponse<{ author: UsersResponse }>;
 }>();
 
 const avatarUrl = await getImageUrl(
-  nuxtApp.$pb,
   props.like.expand?.author,
   props.like.expand?.author.avatar
 );

@@ -40,14 +40,13 @@ import type {
   UsersResponse,
 } from "~/types/pocketbase";
 
-const nuxtApp = useNuxtApp();
+const { getImageUrl } = useDb();
 
 const props = defineProps<{
   rating: RatingsResponse<{ author: UsersResponse; recipe: RecipesResponse }>;
 }>();
 
 const avatarUrl = await getImageUrl(
-  nuxtApp.$pb,
   props.rating.expand?.author,
   props.rating.expand?.author.avatar
 );

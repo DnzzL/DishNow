@@ -76,11 +76,9 @@ definePageMeta({
   layout: "unlogged",
 });
 
-import { signup } from "~/utils/pocketbase";
-
-const nuxtApp = useNuxtApp();
 const router = useRouter();
 const toast = useToast();
+const { signup } = useDb();
 
 const username = ref("");
 const fname = ref("");
@@ -90,7 +88,6 @@ const passwordConfirm = ref("");
 async function handleSubmit() {
   try {
     await signup({
-      pb: nuxtApp.$pb,
       username: username.value,
       password: password.value,
       passwordConfirm: passwordConfirm.value,

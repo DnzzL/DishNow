@@ -1,4 +1,4 @@
-import PocketBase, { RecordListQueryParams } from "pocketbase";
+import { RecordListQueryParams } from "pocketbase";
 
 import {
   CollectionRecords,
@@ -17,27 +17,23 @@ export function useDb() {
 
   // Auth functions
   async function login({
-    pb,
     username,
     password,
   }: {
-    pb: PocketBase;
     username: string;
     password: string;
   }) {
-    await pb
+    await nuxtApp.$pb
       .collection("users")
       .authWithPassword<UsersResponse>(username, password);
   }
 
   async function signup({
-    pb,
     username,
     password,
     passwordConfirm,
     name,
   }: {
-    pb: PocketBase;
     username: string;
     password: string;
     passwordConfirm: string;
@@ -51,14 +47,14 @@ export function useDb() {
         name,
       };
 
-      await pb.collection("users").create<UsersResponse>(data);
+      await nuxtApp.$pb.collection("users").create<UsersResponse>(data);
     } catch (error) {
       throw error;
     }
   }
 
-  async function logout(pb: PocketBase) {
-    await pb.authStore.clear();
+  async function logout() {
+    await nuxtApp.$pb.authStore.clear();
   }
 
   // Generic Helpers functions

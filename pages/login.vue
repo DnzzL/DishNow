@@ -51,20 +51,17 @@ definePageMeta({
 });
 
 import { ClientResponseError } from "pocketbase";
-import { login } from "~/utils/pocketbase";
 
 const router = useRouter();
 const toast = useToast();
+const { login } = useDb();
 
 const username = ref("");
 const password = ref("");
 
-const nuxtApp = useNuxtApp();
-const pb = nuxtApp!.$pb;
-
 async function handleSubmit() {
   try {
-    await login({ pb, username: username.value, password: password.value });
+    await login({ username: username.value, password: password.value });
     router.push("/");
   } catch (error) {
     if (error instanceof ClientResponseError) {

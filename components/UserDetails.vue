@@ -38,26 +38,22 @@
 
 <script setup lang="ts">
 import type { UsersResponse } from "~/types/pocketbase";
-import { getImageUrl, logout } from "~/utils/pocketbase";
 
-const nuxtApp = useNuxtApp();
 const router = useRouter();
 const toast = useToast();
+const { getImageUrl, logout } = useDb();
 
 type Props = {
   user: UsersResponse;
 };
 const props = defineProps<Props>();
 
-const avatarUrl = await getImageUrl(
-  nuxtApp.$pb,
-  props.user,
-  props.user.avatar,
-  { thumb: "100x250" }
-);
+const avatarUrl = await getImageUrl(props.user, props.user.avatar, {
+  thumb: "100x250",
+});
 
 function handleLogout() {
-  logout(nuxtApp.$pb);
+  logout();
   toast.add({
     title: "Déconnexion réussie",
     description: "Vous êtes maintenant déconnecté.",

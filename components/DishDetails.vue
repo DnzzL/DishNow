@@ -60,7 +60,7 @@ import type {
 } from "~/types/pocketbase";
 import CommentCard from "./CommentCard.vue";
 
-const nuxtApp = useNuxtApp();
+const { getImageUrl } = useDb();
 
 const props = defineProps<{
   dish: DishesResponse<{
@@ -75,9 +75,5 @@ const tagContent = computed(() => {
     .join(", ");
 });
 
-const mediaUrl = await getImageUrl(
-  nuxtApp.$pb,
-  props.dish,
-  props.dish.media[0]
-);
+const mediaUrl = await getImageUrl(props.dish, props.dish.media[0]);
 </script>
