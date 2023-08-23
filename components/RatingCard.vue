@@ -21,11 +21,13 @@
       </div>
     </template>
     <template #default>
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-medium">{{ rating.expand?.recipe.title }}</h2>
-        <RatingDisplay :stars="rating.stars" />
-      </div>
-      <div class="mt-4 text-gray-600 text-sm">{{ rating.details }}</div>
+      <NuxtLink :href="`/recipes/${rating.recipe}`">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-medium">{{ rating.expand?.recipe.title }}</h2>
+          <RatingDisplay :stars="rating.stars" />
+        </div>
+        <div class="mt-4 text-gray-600 text-sm">{{ rating.details }}</div>
+      </NuxtLink>
     </template>
     <template #footer>
       <p class="text-xs text-gray-500">{{ rating.created }}</p>

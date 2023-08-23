@@ -72,6 +72,8 @@
 </template>
 
 <script setup lang="ts">
+import { ClientResponseError } from "pocketbase";
+
 definePageMeta({
   layout: "unlogged",
 });
@@ -100,12 +102,14 @@ async function handleSubmit() {
       color: "green",
     });
     router.push("/login");
-  } catch (error: any) {
-    toast.add({
-      title: "Une erreur est survenue",
-      description: error.data.message,
-      icon: "i-tabler-circle-x",
-    });
+  } catch (error) {
+    if (error instanceof ClientResponseError) {
+      toast.add({
+        title: "Une erreur est survenue",
+        description: error.data.message,
+        icon: "i-tabler-circle-x",
+      });
+    }
   }
 }
 </script>

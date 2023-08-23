@@ -21,7 +21,9 @@
       </div>
     </template>
     <template #default>
-      <p>{{ comment.text }}</p>
+      <NuxtLink :href="`/dishes/${comment.dish}`">
+        <p>{{ comment.text }}</p>
+      </NuxtLink>
     </template>
     <template #footer>
       <p class="text-xs text-gray-500">{{ comment.created }}</p>

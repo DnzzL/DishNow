@@ -44,13 +44,22 @@
           :key="comment.id"
           v-for="comment in comments"
         />
-        <TextAreaInput />
+        <form @submit.prevent="save">
+          <TextAreaInput v-model="comment" />
+          <UButton
+            icon="i-tabler-send"
+            color="primary"
+            variant="soft"
+            type="submit"
+          />
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ClientResponseError } from "pocketbase";
 import type {
   CommentsResponse,
   DishesResponse,
@@ -61,7 +70,10 @@ import type {
 } from "~/types/pocketbase";
 import CommentCard from "./CommentCard.vue";
 
-const { getImageUrl } = useDb();
+const { createRecord, getImageUrl } = useDb();
+
+const nuxtApp = useNuxtApp();
+const toast = useToast();
 
 const props = defineProps<{
   dish: DishesResponse<{
@@ -70,6 +82,8 @@ const props = defineProps<{
   comments: CommentsResponse<{ author: UsersResponse }>[];
 }>();
 
+const comment = ref("");
+
 const tagContent = computed(() => {
   return props.dish.expand?.recipe.expand?.tags
     ?.map((tag) => tag.text)
@@ -77,4 +91,25 @@ const tagContent = computed(() => {
 });
 
 const mediaUrl = await getImageUrl(props.dish, props.dish.media[0]);
+
+async function save() {
+  try {
+    await createRecord("comments", {
+      text: comment.value,
+      dish: props.dish.id,
+      author: nuxtApp.$pb.authStore.model?.id!,
+    });
+    comment.value = "";
+    await refreshNuxtData("comments");
+  } catch (error) {
+    if (error instanceof ClientResponseError) {
+      toast.add({
+        title: "Une erreur est survenue",
+        description: error.data.message,
+        icon: "i-tabler-circle-x",
+        color: "red",
+      });
+    }
+  }
+}
 </script>
