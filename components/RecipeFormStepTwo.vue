@@ -100,9 +100,12 @@ onMounted(() => {
   servings.value = props.partialRecipe.servings || 0;
   totalTime.value = props.partialRecipe.totalTime || 0;
   ingredients.value = props.partialRecipe.ingredients || [];
-  ingredientRange.value = props.partialRecipe.ingredients?.length - 1 || 0;
+  ingredientRange.value = Math.max(props.partialRecipe.ingredients?.length, 1);
   instructions.value = props.partialRecipe.instructions || [];
-  instructionRange.value = props.partialRecipe.instructions?.length - 1 || 0;
+  instructionRange.value = Math.max(
+    props.partialRecipe.instructions?.length,
+    1
+  );
   tags.value = props.partialRecipe.tags || [];
 });
 

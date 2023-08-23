@@ -97,8 +97,28 @@ async function handleStepOneSubmit({
 }
 
 async function fetchRecipe() {
+  let endpoint = "";
+  // verify if url is from marmiton
+  if (url.value?.includes("marmiton.org")) {
+    endpoint = "/api/marmiton";
+  } else if (url.value?.includes("journaldesfemmes.fr")) {
+    endpoint = "/api/journaldesfemmes";
+  } else if (url.value?.includes("jow.fr")) {
+    endpoint = "/api/jow";
+  } else if (url.value?.includes("750g.com")) {
+    endpoint = "/api/750g";
+  } else if (url.value?.includes("instagram.com")) {
+    endpoint = "/api/instagram";
+  } else {
+    toast.add({
+      title: "Erreur",
+      description: "Le site n'est pas supporté",
+      icon: "i-tabler-circle-x",
+      color: "red",
+    });
+  }
   try {
-    const recipe = $fetch("/api/marmiton", {
+    const recipe = $fetch(endpoint, {
       method: "POST",
       body: JSON.stringify({ url: url.value }),
     });
@@ -176,6 +196,7 @@ async function handleStepThreeSubmit({
       icon: "i-tabler-circle-check",
       color: "green",
     });
+    emit("done");
   } catch (err) {
     console.log(err);
   }
