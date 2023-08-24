@@ -12,10 +12,11 @@
         </NuxtLink>
         <div>
           <p>
-            <span class="text-gray-780 font-medium">{{
+            <span class="text-gray-700 font-medium">{{
               dish.expand?.author.name
             }}</span>
             a cuisiné
+            <span class="font-medium">{{ dish.expand?.recipe.title }}</span>
           </p>
         </div>
       </div>
@@ -59,12 +60,16 @@
 </template>
 
 <script setup lang="ts">
-import type { DishesResponse, UsersResponse } from "~/types/pocketbase";
+import type {
+  DishesResponse,
+  RecipesResponse,
+  UsersResponse,
+} from "~/types/pocketbase";
 
 const { getImageUrl } = useDb();
 
 const props = defineProps<{
-  dish: DishesResponse<{ author: UsersResponse }>;
+  dish: DishesResponse<{ author: UsersResponse; recipe: RecipesResponse }>;
 }>();
 
 const mediaUrl = await getImageUrl(props.dish, props.dish.media[0]);

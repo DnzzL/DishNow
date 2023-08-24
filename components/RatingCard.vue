@@ -12,10 +12,11 @@
         </NuxtLink>
         <div>
           <p>
-            <span class="text-gray-780 font-medium">{{
+            <span class="text-gray-700 font-medium">{{
               rating.expand?.author.name
             }}</span>
             a noté
+            <span class="font-medium"> {{ rating.expand?.recipe.title }}</span>
           </p>
         </div>
       </div>

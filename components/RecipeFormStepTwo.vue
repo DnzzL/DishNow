@@ -71,10 +71,12 @@
         @item-change="handleInstructionChange"
       />
       <label class="label" for="tags">Tags</label>
-      <TagsInput id="newRecipe" :value="tags" />
+      <TagsInput id="newRecipe" :value="tags" class="max-w-96" />
     </div>
-    <div>
-      <button type="submit" class="btn btn-primary text-white">Next</button>
+    <div class="flex mt-4">
+      <button type="submit" class="btn btn-primary text-white mx-auto">
+        Suivant
+      </button>
     </div>
   </form>
 </template>

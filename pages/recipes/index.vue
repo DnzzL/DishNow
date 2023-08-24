@@ -1,8 +1,16 @@
 <template>
-  <div>
+  <Navbar>
+    <template #action>
+      <UButton
+        icon="i-tabler-bookmark-plus"
+        variant="soft"
+        @click="isOpen = true"
+      />
+    </template>
+  </Navbar>
+  <main>
     <div class="flex flex-row justify-between align-middle">
       <h1 class="text-4xl font-cal font-bold mt-2 mb-5">Mes recettes</h1>
-      <UButton icon="i-tabler-plus" variant="soft" @click="isOpen = true" />
     </div>
     <UModal v-model="isOpen">
       <div class="py-4">
@@ -18,7 +26,7 @@
         <RecipeCard :recipe="recipe" />
       </NuxtLink>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">

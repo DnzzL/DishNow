@@ -12,10 +12,11 @@
         </NuxtLink>
         <div>
           <p>
-            <span class="text-gray-780 font-medium">{{
+            <span class="text-gray-700 font-medium">{{
               comment.expand?.author.name
             }}</span>
             a commenté
+            <span class="font-medium"> {{ comment.expand?.dish.title }}</span>
           </p>
         </div>
       </div>
@@ -32,12 +33,16 @@
 </template>
 
 <script setup lang="ts">
-import type { CommentsResponse, UsersResponse } from "~/types/pocketbase";
+import type {
+  CommentsResponse,
+  DishesResponse,
+  UsersResponse,
+} from "~/types/pocketbase";
 
 const { getImageUrl } = useDb();
 
 const props = defineProps<{
-  comment: CommentsResponse<{ author: UsersResponse }>;
+  comment: CommentsResponse<{ author: UsersResponse; dish: DishesResponse }>;
 }>();
 
 const avatarUrl = await getImageUrl(

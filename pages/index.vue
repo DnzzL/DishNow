@@ -1,6 +1,10 @@
 <template>
+  <Navbar>
+    <template #action>
+      <UButton icon="i-tabler-plus" variant="soft" @click="isOpen = true" />
+    </template>
+  </Navbar>
   <main>
-    <UButton icon="i-tabler-plus" variant="soft" @click="isOpen = true" />
     <section class="mb-24 mt-6">
       <div class="space-y-4" v-if="feedItems?.length > 0">
         <div class="grid place-items-center" v-for="item in feedItems">
@@ -46,10 +50,13 @@ type FeedItemType =
   | Collections.Likes
   | Collections.Ratings;
 
-type DishItem = DishesResponse<{ author: UsersResponse }>;
-type CommentItem = CommentsResponse<{
+type DishItem = DishesResponse<{
   author: UsersResponse;
   recipe: RecipesResponse;
+}>;
+type CommentItem = CommentsResponse<{
+  author: UsersResponse;
+  dish: DishesResponse;
 }>;
 type LikesItem = LikesResponse<{ author: UsersResponse }>;
 type RatingsItem = RatingsResponse<{
@@ -68,7 +75,7 @@ const { data: dishes } = await useAsyncData("dishes", async (nuxtApp) => {
   const records = (await nuxtApp!.$pb
     .collection("dishes")
     .getFullList<DishItem>({
-      expand: "author",
+      expand: "author,recipe",
     })) as DishItem[];
   return structuredClone(records);
 });
@@ -77,7 +84,7 @@ const { data: comments } = await useAsyncData("comments", async (nuxtApp) => {
   const records = (await nuxtApp!.$pb
     .collection("comments")
     .getFullList<CommentItem>({
-      expand: "author,recipe",
+      expand: "author,dish",
     })) as CommentItem[];
   return structuredClone(records);
 });

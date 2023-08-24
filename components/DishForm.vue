@@ -1,6 +1,6 @@
 <template>
-  <div class="grid place-items-center">
-    <h1 class="text-4xl">New dish</h1>
+  <div class="grid place-items-center gap-1">
+    <h1 class="text-4xl">Nouveau plat</h1>
     <div class="flex">
       <input
         type="text"
@@ -40,19 +40,20 @@
       />
       <label for="img" class="label">Images</label>
       <div class="flex flex-col w-full">
-        <ul v-if="numberFiles > 0" v-for="(thumbnail, i) in media">
-          <li :key="thumbnail.name">
+        <ul v-if="numberFiles > 0">
+          <li v-for="(thumbnail, i) in media" :key="thumbnail.name">
             <div class="flex justify-evenly items-center">
               <p>{{ thumbnail.name }}</p>
-              <UButton
-                icon="i-tabler-trash-x"
-                size="sm"
-                variant="soft"
-                @click="media.splice(i, 1)"
-              />
             </div>
           </li>
+          <UButton
+            icon="i-tabler-trash-x"
+            size="sm"
+            variant="soft"
+            @click="media = undefined"
+          />
         </ul>
+
         <UploadBox
           @files-changed="handleMediaChange"
           :max-files="3"
@@ -62,13 +63,15 @@
       <p v-if="numberFiles > 0" class="text-gray-500">
         ({{ numberFiles }} / 3) files selected
       </p>
-      <button
-        type="submit"
-        @click="handleDishCreation"
-        :class="['btn', 'btn-primary', 'text-white']"
-      >
-        Submit
-      </button>
+      <div class="flex">
+        <button
+          type="submit"
+          @click="handleDishCreation"
+          class="btn btn-primary text-white mt-4 mx-auto"
+        >
+          Submit
+        </button>
+      </div>
     </form>
   </div>
 </template>

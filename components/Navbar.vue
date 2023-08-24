@@ -1,51 +1,18 @@
 <template>
-  <div class="px-7 bg-white shadow-lg rounded-2xl">
-    <div class="flex">
-      <div class="flex-1 group" v-for="{ path, name, iconName } in paths">
-        <NuxtLink
-          :href="path"
-          class="flex items-end justify-center text-center mx-auto px-4 pt-2 w-full text-gray-400 group-hover:text-primary"
-        >
-          <span
-            class="block px-1 pt-1 pb-1"
-            :class="[pathname === path ? 'text-primary' : '']"
-          >
-            <UIcon :name="iconName" />
-            <span class="block text-xs pb-2">{{ name }}</span>
-            <span
-              class="block w-5 mx-auto h-1 group-hover:bg-primary rounded-full"
-            ></span>
-          </span>
-        </NuxtLink>
+  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <div class="flex justify-evenly py-2">
+      <div>
+        <p class="text-3xl font-bold font-cal">
+          dishNOW<span class="text-primary-500">!</span>
+        </p>
+      </div>
+
+      <div class="flex gap-4">
+        <div><slot name="action" /></div>
+        <UserDropdown />
       </div>
     </div>
-  </div>
+  </nav>
 </template>
 
-<script setup lang="ts">
-const route = useRoute();
-const pathname = route.path;
-
-const paths = [
-  {
-    path: "/",
-    name: "Home",
-    iconName: "i-tabler-home",
-  },
-  {
-    path: "/search",
-    name: "Search",
-    iconName: "i-tabler-search",
-  },
-  {
-    path: "/recipes",
-    name: "Recipes",
-    iconName: "i-tabler-bookmark",
-  },
-  {
-    path: "/profile",
-    name: "Profile",
-    iconName: "i-tabler-user",
-  },
-];
-</script>
+<script setup lang="ts"></script>
