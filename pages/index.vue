@@ -10,7 +10,7 @@
     </template>
   </Navbar>
   <main>
-    <section class="mb-24 mt-6">
+    <section class="mb-24 mt-2">
       <div class="space-y-4" v-if="feedItems?.length > 0">
         <div class="grid place-items-center" v-for="item in feedItems">
           <DishCard :dish="item.data" v-if="item.type === Collections.Dishes" />

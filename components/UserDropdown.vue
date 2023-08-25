@@ -8,7 +8,7 @@
 
     <template #account="{ item }">
       <div class="text-left">
-        <p>Signed in as</p>
+        <p>Connecté</p>
         <p class="truncate font-medium text-gray-900 dark:text-white">
           {{ item.label }}
         </p>
@@ -49,14 +49,14 @@ const items = [
   ],
   [
     {
-      label: "Settings",
+      label: "Paramètres",
       icon: "i-tabler-settings",
       to: "/profile",
     },
   ],
   [
     {
-      label: "Sign out",
+      label: "Déconnexion",
       icon: "i-tabler-logout",
       click: () => {
         logout();

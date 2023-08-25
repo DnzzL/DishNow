@@ -1,5 +1,5 @@
 <template>
-  <UserDetails :user="user" />
+  <Profile :user="user" />
 </template>
 
 <script setup lang="ts">

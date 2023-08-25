@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+  <nav class="border-gray-400 dark:bg-gray-900">
     <div class="flex justify-evenly items-center py-2">
       <div>
         <p class="text-3xl font-bold font-cal">

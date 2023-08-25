@@ -4,7 +4,7 @@
       <h2 class="text-3xl font-bold text-neutral mb-6 font-cal">Sign Up</h2>
       <form class="space-y-6" @submit.prevent="handleSubmit">
         <div class="form-control">
-          <label class="label" for="name">Name</label>
+          <label class="label" for="name">Nom</label>
           <input
             class="input input-bordered w-full"
             id="name"
@@ -17,7 +17,7 @@
           />
         </div>
         <div class="form-control">
-          <label class="label" for="username">Username</label>
+          <label class="label" for="username">Nom utilisateur</label>
           <input
             class="input input-bordered w-full"
             id="username"
@@ -30,7 +30,7 @@
           />
         </div>
         <div class="form-control">
-          <label class="label" for="password">Password</label>
+          <label class="label" for="password">Mot de passe</label>
           <input
             class="input input-bordered w-full"
             id="password"
@@ -43,7 +43,7 @@
           />
         </div>
         <div class="form-control">
-          <label class="label" for="password">Confirm Password</label>
+          <label class="label" for="password">Confirmation mot de passe</label>
           <input
             class="input input-bordered w-full"
             id="confirmPassword"
@@ -56,15 +56,15 @@
           />
         </div>
         <button class="btn btn-primary w-full text-white" type="submit">
-          Sign Up
+          S'enregistrer
         </button>
       </form>
       <div class="mt-4 text-sm text-center text-neutral">
-        Already have an account?
+        Déjà un compte ?
         <NuxtLink
           href="/login"
           class="text-accent font-semibold hover:text-accent-dark"
-          >Log In now</NuxtLink
+          >Se connecter</NuxtLink
         >
       </div>
     </div>

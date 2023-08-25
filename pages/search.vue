@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <Navbar />
+  <main>
     <div class="flex flex-row justify-between align-middle">
       <h1 class="text-4xl font-cal font-bold mt-2 mb-5">Recherche</h1>
     </div>
@@ -24,7 +25,7 @@
         />
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -48,26 +49,3 @@ watch(searchQuery, async (newValue) => {
   recipes.value = matchingRecipes.value;
 });
 </script>
-
-<!-- try {
-    const matchingRecipes = await getRecordList<RecipesResponse>(
-      nuxtApp.$pb,
-      "recipes",
-      {
-        page: 1,
-        params: {
-          filter: `title ~ "${searchQuery}" || ingredients.name ?~ "${searchQuery}"`,
-          expand: "ingredients",
-        },
-      }
-    );
-    const filteredRecipes = [...matchingRecipes];
-    recipes.value = filteredRecipes;
-  } catch (error) {
-    if (error instanceof ClientResponseError) {
-      return new Response(null, {
-        status: 500,
-        statusText: error.message,
-      });
-    }
-  } -->

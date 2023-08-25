@@ -29,22 +29,22 @@ const pathname = route.path;
 const paths = [
   {
     path: "/",
-    name: "Home",
-    iconName: "i-tabler-home",
+    name: "Actus",
+    iconName: "i-tabler-news",
   },
   {
     path: "/search",
-    name: "Search",
+    name: "Recherche",
     iconName: "i-tabler-search",
   },
   {
     path: "/recipes",
-    name: "Recipes",
+    name: "Recettes",
     iconName: "i-tabler-bookmark",
   },
   {
     path: "/profile",
-    name: "Profile",
+    name: "Profil",
     iconName: "i-tabler-user",
   },
 ];
