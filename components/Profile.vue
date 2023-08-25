@@ -27,8 +27,8 @@
         <template #header>
           <div class="flex justify-between">
             <h2 class="text-xl font-medium">Informations</h2>
-            <UIcon
-              name="i-tabler-edit"
+            <UButton
+              icon="i-tabler-edit"
               variant="soft"
               color="gray"
               @click="disabled = !disabled"

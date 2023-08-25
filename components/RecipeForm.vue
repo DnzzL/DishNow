@@ -18,7 +18,7 @@
       v-if="state.value?.enteringMedia === 'idle'"
     />
     <button
-      class="btn btn-primary text-white btn-circle fixed bottom-5 left-5 btn-sm"
+      class="btn btn-primary text-white btn-circle btn-sm mt-2"
       @click="send('BACK')"
       type="button"
       v-if="state.value?.enteringOrigin !== 'idle'"
@@ -107,6 +107,8 @@ async function fetchRecipe() {
     endpoint = "/api/jow";
   } else if (url.value?.includes("750g.com")) {
     endpoint = "/api/750g";
+  } else if (url.value?.includes("cookomix.com")) {
+    endpoint = "/api/cookomix";
   } else if (url.value?.includes("instagram.com")) {
     endpoint = "/api/instagram";
   } else {
@@ -139,13 +141,14 @@ async function handleStepTwoSubmit({
   try {
     const createdIngredients = await createIngredients(stepTwoIngredientIds);
     const createdInstructions = await createInstructions(stepTwoInstructionIds);
-    const tagIds = await createTags(stepTwoTags);
+    const createdTagIds = await createTags(stepTwoTags);
 
     title.value = stepTwoTitle;
     servings.value = stepTwoServings;
     totalTime.value = stepTwoTotalTime;
     ingredientIds.value = createdIngredients;
     instructionIds.value = createdInstructions;
+    tagIds.value = createdTagIds;
 
     send("CONFIRM_CONTENT", {
       title: stepTwoTitle,

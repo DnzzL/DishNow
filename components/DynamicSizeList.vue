@@ -5,10 +5,10 @@
         <input
           type="text"
           id="steps"
-          @change="(event) => emit('itemChange', index, event)"
+          @change="(event) => emit('itemChange', index - 1, event)"
           list="suggestions"
           class="input input-bordered"
-          :value="items[index]"
+          :value="items[index - 1]"
         />
         <datalist v-if="suggestions" id="suggestions">
           <option v-for="{ id, name } in suggestions" :key="id">

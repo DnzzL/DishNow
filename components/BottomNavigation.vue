@@ -6,15 +6,9 @@
           :href="path"
           class="flex items-end justify-center text-center mx-auto px-4 pt-2 w-full text-gray-400 group-hover:text-primary"
         >
-          <span
-            class="block px-1 pt-1 pb-1"
-            :class="[pathname === path ? 'text-primary' : '']"
-          >
+          <span class="block px-1 pt-1 pb-1">
             <UIcon :name="iconName" />
             <span class="block text-xs pb-2">{{ name }}</span>
-            <span
-              class="block w-5 mx-auto h-1 group-hover:bg-primary rounded-full"
-            ></span>
           </span>
         </NuxtLink>
       </div>

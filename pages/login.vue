@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center justify-center h-screen bg-base-100">
     <div class="w-full max-w-md p-6 rounded-lg shadow-md bg-white">
-      <h2 class="text-3xl font-bold text-neutral mb-6 font-cal">Log In</h2>
+      <h2 class="text-3xl font-bold text-neutral mb-6 font-cal">Connexion</h2>
       <form class="space-y-6" @submit.prevent="handleSubmit">
         <div class="form-control">
           <label class="label" for="username">Nom d'utilisateur</label>

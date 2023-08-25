@@ -21,10 +21,14 @@
         v-model="url"
         required
       />
-      <button type="submit" class="btn btn-primary text-white">Fetch</button>
+      <button type="submit" class="btn btn-primary text-white mt-2">
+        Récupérer
+      </button>
     </div>
     <div v-else class="grid place-items-center">
-      <button type="submit" class="btn btn-primary text-white">Next</button>
+      <button type="submit" class="btn btn-primary text-white mt-2">
+        Suivant
+      </button>
     </div>
   </form>
 </template>

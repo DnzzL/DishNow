@@ -15,7 +15,7 @@
     </div>
     <UModal v-model="isOpen">
       <div class="py-4">
-        <RecipeForm @done="isOpen = false" />
+        <RecipeForm @done="handleDone" />
       </div>
     </UModal>
     <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-16">
@@ -31,16 +31,25 @@
 </template>
 
 <script setup lang="ts">
-import { RecipesResponse } from "~/types/pocketbase";
+import { RecipesResponse, UsersResponse } from "~/types/pocketbase";
 
+const nuxtApp = useNuxtApp();
+
+const user = nuxtApp.$pb.authStore.model as unknown as UsersResponse;
 const isOpen = ref(false);
 
-const { data: recipes } = await useAsyncData(async (nuxtApp) => {
+const { data: recipes } = await useAsyncData("recipes", async (nuxtApp) => {
   const records = (await nuxtApp!.$pb
     .collection("recipes")
     .getFullList<RecipesResponse>({
       sort: "-created",
+      filter: `author.id = '${user.id}'`,
     })) as RecipesResponse[];
   return structuredClone(records);
 });
+
+async function handleDone() {
+  isOpen.value = false;
+  await refreshNuxtData("recipes");
+}
 </script>

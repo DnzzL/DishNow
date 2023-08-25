@@ -1,7 +1,5 @@
 # Todo
 
-- Bug index 0 prefetch
-- New sites (Cookomix?)
 - Profile page
 - Add Rating
 - Add likes
