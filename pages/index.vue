@@ -1,7 +1,12 @@
 <template>
   <Navbar>
     <template #action>
-      <UButton icon="i-tabler-plus" variant="soft" @click="isOpen = true" />
+      <UButton
+        icon="i-tabler-plus"
+        label="Plat"
+        variant="soft"
+        @click="isOpen = true"
+      />
     </template>
   </Navbar>
   <main>

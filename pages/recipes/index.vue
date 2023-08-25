@@ -3,6 +3,7 @@
     <template #action>
       <UButton
         icon="i-tabler-bookmark-plus"
+        label="Recette"
         variant="soft"
         @click="isOpen = true"
       />
