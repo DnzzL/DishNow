@@ -38,7 +38,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { RecipesResponse } from "~/types/pocketbase";
+import type { RecipesResponse, UsersResponse } from "~/types/pocketbase";
+
+type RecipeItem = RecipesResponse<{
+  author: UsersResponse;
+}>;
 
 const searchQuery = ref("");
 const page = ref(1);
@@ -49,9 +53,9 @@ watch(searchQuery, async (newValue: any) => {
   const { data: matchingRecipes } = useAsyncData(async (nuxtApp) => {
     const response = await nuxtApp!.$pb
       .collection("recipes")
-      .getList<RecipesResponse>(page.value, pageSize.value, {
+      .getList<RecipeItem>(page.value, pageSize.value, {
         filter: `title ~ "${newValue}" || ingredients.name ?~ "${newValue}"`,
-        expand: "ingredients",
+        expand: "ingredients,author",
       });
     return structuredClone(response.items);
   });
