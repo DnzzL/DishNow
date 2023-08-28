@@ -8,7 +8,7 @@
           alt="Dish Image"
         />
         <h2 class="text-4xl font-medium">{{ recipe.title }}</h2>
-        <NuxtLink :to="recipe.origin" target="_blank">
+        <NuxtLink :to="recipe.origin" target="_blank" v-if="recipe.origin">
           <UButton
             icon="i-tabler-external-link"
             label="Recette originale"

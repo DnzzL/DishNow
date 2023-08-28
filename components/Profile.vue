@@ -8,17 +8,18 @@
             <UAvatar size="3xl" :src="avatarUrl" />
             <div class="flex flex-col justify-evenly">
               <h1 class="font-cal text-3xl font-bold">{{ user.name }}</h1>
-              <label for="avatar">
+              <div class="flex items-center">
+                <UButton variant="soft" label="Changer image" for="avatar" />
+                <label for="file-upload" class="custom-file-upload">
+                  <UIcon name="i-tabler-upload" class="cursor-pointer" />
+                </label>
                 <input
+                  id="file-upload"
                   type="file"
-                  class="file-input w-full hidden"
-                  id="avatar" />
-                <UButton
-                  variant="soft"
-                  icon="i-tabler-upload"
-                  label="Changer image"
-                  for="avatar"
-              /></label>
+                  class="hidden"
+                  @input="updateAvatar"
+                />
+              </div>
             </div>
           </div>
         </template>
@@ -94,6 +95,29 @@ const state = ref({
 
 const form = ref();
 
+async function updateAvatar(event: any) {
+  try {
+    const avatar = event.target.files[0];
+    const payload = new FormData();
+    payload.append("avatar", avatar);
+    await updateRecord("users", props.user.id, payload as any);
+    toast.add({
+      title: "Avatar mis à jour",
+      icon: "i-tabler-circle-check",
+      color: "green",
+    });
+  } catch (error) {
+    if (error instanceof ClientResponseError) {
+      toast.add({
+        title: "Une erreur est survenue",
+        description: error.data.message,
+        icon: "i-tabler-circle-x",
+        color: "red",
+      });
+    }
+  }
+}
+
 async function submit() {
   try {
     await form.value!.validate();
@@ -122,7 +146,6 @@ async function submit() {
     }
   }
 }
-
 const avatarUrl = await getImageUrl(props.user, props.user.avatar, {
   thumb: "100x250",
 });
