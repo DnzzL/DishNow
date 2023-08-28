@@ -1,8 +1,5 @@
 <template>
   <div class="mx-auto max-w-xs">
-    <label for="example5" class="mb-1 block text-sm font-medium text-gray-700"
-      >Upload file</label
-    >
     <label
       class="flex flex-col w-full cursor-pointer appearance-none items-center justify-center rounded-md border-2 border-dashed border-gray-200 p-6 transition-all hover:border-primary-300"
     >

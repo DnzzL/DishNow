@@ -24,10 +24,8 @@
       </ul>
       <UploadBox @files-changed="thumbnailChanged" :max-files="1" v-else />
     </div>
-    <div class="flex justify-center">
-      <button type="submit" class="btn btn-primary text-white m-4">
-        Create
-      </button>
+    <div class="flex justify-center my-4">
+      <UButton label="Créer" variant="solid" type="submit" />
     </div>
   </form>
 </template>

@@ -71,12 +71,10 @@
         @item-change="handleInstructionChange"
       />
       <label class="label" for="tags">Tags</label>
-      <TagsInput id="newRecipe" :value="tags" class="max-w-96" />
+      <CustomTagsInput class="max-w-96" v-model="tags" />
     </div>
-    <div class="flex mt-4">
-      <button type="submit" class="btn btn-primary text-white mx-auto">
-        Suivant
-      </button>
+    <div class="flex justify-center my-4">
+      <UButton label="Suivant" variant="solid" type="submit" />
     </div>
   </form>
 </template>
@@ -86,7 +84,6 @@ import type Pocketbase from "pocketbase";
 import { ref } from "vue";
 import type { RecipesRecord } from "~/types/pocketbase";
 import DynamicSizeList from "./DynamicSizeList.vue";
-import TagsInput from "./TagsInput.vue";
 
 const ingredients = ref<string[]>([]);
 const instructions = ref<string[]>([]);
@@ -98,17 +95,17 @@ const props = defineProps<{
 }>();
 
 onMounted(() => {
-  title.value = props.partialRecipe.title || "";
-  servings.value = props.partialRecipe.servings || 0;
-  totalTime.value = props.partialRecipe.totalTime || 0;
-  ingredients.value = props.partialRecipe.ingredients || [];
-  ingredientRange.value = Math.max(props.partialRecipe.ingredients?.length, 1);
-  instructions.value = props.partialRecipe.instructions || [];
+  title.value = props.partialRecipe?.title || "";
+  servings.value = props.partialRecipe?.servings || 0;
+  totalTime.value = props.partialRecipe?.totalTime || 0;
+  ingredients.value = props.partialRecipe?.ingredients || [];
+  ingredientRange.value = Math.max(props.partialRecipe?.ingredients?.length, 1);
+  instructions.value = props.partialRecipe?.instructions || [];
   instructionRange.value = Math.max(
-    props.partialRecipe.instructions?.length,
+    props.partialRecipe?.instructions?.length,
     1
   );
-  tags.value = props.partialRecipe.tags || [];
+  tags.value = props.partialRecipe?.tags || [];
 });
 
 const title = ref("");

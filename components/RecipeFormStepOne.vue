@@ -1,11 +1,11 @@
 <template>
   <form @submit.prevent="submit">
     <div class="form-control">
-      <label class="label cursor-pointer" for="origin">
+      <label class="label cursor-pointer flex gap-2" for="origin">
         <span class="label-text">Externe</span>
         <input type="radio" value="external" v-model="origin" class="radio" />
       </label>
-      <label class="label cursor-pointer" for="origin">
+      <label class="label cursor-pointer flex gap-2" for="origin">
         <span class="label-text">Custom</span>
         <input type="radio" value="custom" v-model="origin" class="radio" />
       </label>
@@ -21,14 +21,14 @@
         v-model="url"
         required
       />
-      <button type="submit" class="btn btn-primary text-white mt-2">
-        Récupérer
-      </button>
+      <div class="flex justify-center my-4">
+        <UButton label="Récupérer" variant="solid" type="submit" />
+      </div>
     </div>
     <div v-else class="grid place-items-center">
-      <button type="submit" class="btn btn-primary text-white mt-2">
-        Suivant
-      </button>
+      <div class="flex justify-center my-4">
+        <UButton label="Suivant" variant="solid" type="submit" />
+      </div>
     </div>
   </form>
 </template>

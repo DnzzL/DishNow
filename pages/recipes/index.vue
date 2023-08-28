@@ -9,7 +9,7 @@
       />
     </template>
   </Navbar>
-  <main>
+  <main class="pb-12">
     <div class="flex flex-row justify-between align-middle">
       <h1 class="text-4xl font-cal font-bold mt-2 mb-5">Mes recettes</h1>
     </div>

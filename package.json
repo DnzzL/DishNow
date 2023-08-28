@@ -22,9 +22,6 @@
   },
   "dependencies": {
     "@xstate/vue": "^2.0.0",
-    "@zag-js/file-upload": "^0.16.0",
-    "@zag-js/tags-input": "^0.16.0",
-    "@zag-js/vue": "^0.16.0",
     "cheerio": "1.0.0-rc.12",
     "pocketbase": "^0.16.0",
     "xstate": "^4.38.2"

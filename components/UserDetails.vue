@@ -25,7 +25,7 @@
           <UBadge
             variant="soft"
             :label="user.private ? 'Yes' : 'No'"
-            color="blue"
+            color="flamingo"
           />
         </div>
       </div>

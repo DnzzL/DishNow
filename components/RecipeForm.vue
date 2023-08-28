@@ -1,6 +1,13 @@
 <template>
   <div class="flex items-center flex-col">
     <p v-if="state.context.errorMessage">{{ state.context.errorMessage }}</p>
+    <!-- <div class="flex">
+      <UButton
+        v-if="state.value?.enteringOrigin !== 'idle'"
+        icon="i-tabler-arrow-left"
+        @click="send('BACK')"
+      />
+    </div> -->
     <RecipeFormStepOne
       @submit="handleStepOneSubmit"
       v-if="state.value?.enteringOrigin"
@@ -17,14 +24,6 @@
       @submit="handleStepThreeSubmit"
       v-if="state.value?.enteringMedia === 'idle'"
     />
-    <button
-      class="btn btn-primary text-white btn-circle btn-sm mt-2"
-      @click="send('BACK')"
-      type="button"
-      v-if="state.value?.enteringOrigin !== 'idle'"
-    >
-      <UIcon name="i-tabler-arrow-left" />
-    </button>
   </div>
 </template>
 

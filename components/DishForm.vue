@@ -22,7 +22,7 @@
         class="object-cover rounded h-28"
       />
     </figure>
-    <form @submit.prevent class="mb-24">
+    <form @submit.prevent="handleDishCreation">
       <label for="title" class="label">Title</label>
       <input
         type="text"
@@ -63,21 +63,15 @@
       <p v-if="numberFiles > 0" class="text-gray-500">
         ({{ numberFiles }} / 3) files selected
       </p>
-      <div class="flex">
-        <button
-          type="submit"
-          @click="handleDishCreation"
-          class="btn btn-primary text-white mt-4 mx-auto"
-        >
-          Submit
-        </button>
+      <div class="flex justify-center my-4">
+        <UButton label="Sauvegarder" variant="solid" type="submit" />
       </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { DishesRecord, RecipesResponse } from "types/pocketbase";
+import type { DishesRecord, RecipesResponse } from "~/types/pocketbase";
 
 const { getImageUrl, getRecordList } = useDb();
 

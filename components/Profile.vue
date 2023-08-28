@@ -1,6 +1,7 @@
 <template>
   <section>
     <Navbar />
+    <CustomTagsInput />
     <div class="flex flex-col gap-6 lg:gap-12 py-4 lg:py-16">
       <UCard class="w-80 mx-auto">
         <template #default>

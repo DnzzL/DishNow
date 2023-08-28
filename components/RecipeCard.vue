@@ -26,18 +26,17 @@
     </NuxtLink>
     <div class="p-4">
       <h3 class="font-bold text-lg mb-2">{{ props.recipe.title }}</h3>
-      <p class="text-gray-700 text-base">
-        {{ props.recipe.title }}
-      </p>
-      <div class="mt-4">
-        <span
-          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-          >{{ props.recipe.totalTime }} min</span
-        >
-        <span
-          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-          >{{ props.recipe.servings }} servings</span
-        >
+      <div class="mt-4 flex gap-2">
+        <UBadge
+          :label="`${recipe.servings} personnes`"
+          variant="soft"
+          color="flamingo"
+        />
+        <UBadge
+          :label="`${recipe.totalTime} minutes`"
+          variant="soft"
+          color="flamingo"
+        />
       </div>
     </div>
   </div>

@@ -1,9 +1,10 @@
 <template>
   <Navbar />
-  <main>
+  <main class="pb-12">
     <div class="flex flex-row justify-between align-middle">
       <h1 class="text-4xl font-cal font-bold mt-2 mb-5">Recherche</h1>
     </div>
+
     <div class="flex items-center">
       <form>
         <input
@@ -16,13 +17,19 @@
         />
       </form>
     </div>
-    <div class="py-4">
+    <div class="py-4" v-if="recipes && recipes?.length > 0">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
         <RecipeCard
+          v-for="recipe in recipes?.slice(
+            (page - 1) * pageSize,
+            page * pageSize
+          )"
           :recipe="recipe"
-          v-for="recipe in recipes"
           :key="recipe.id"
         />
+      </div>
+      <div class="flex justify-center py-4">
+        <UPagination v-model="page" :total="recipes.length" />
       </div>
     </div>
   </main>
@@ -34,13 +41,15 @@ import { ref } from "vue";
 import type { RecipesResponse } from "~/types/pocketbase";
 
 const searchQuery = ref("");
+const page = ref(1);
+const pageSize = ref(10);
 const recipes = ref<RecipesResponse[] | null>([]);
 
-watch(searchQuery, async (newValue) => {
+watch(searchQuery, async (newValue: any) => {
   const { data: matchingRecipes } = useAsyncData(async (nuxtApp) => {
     const response = await nuxtApp!.$pb
       .collection("recipes")
-      .getList<RecipesResponse>(1, 10, {
+      .getList<RecipesResponse>(page.value, pageSize.value, {
         filter: `title ~ "${newValue}" || ingredients.name ?~ "${newValue}"`,
         expand: "ingredients",
       });
