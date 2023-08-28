@@ -1,8 +1,13 @@
 export default defineAppConfig({
   ui: {
-    primary: "red",
-    gray: "cool",
+    primary: "persian-indigo",
+    gray: "dune",
     icons: ["tabler"],
+    button: {
+      default: {
+        variant: "soft",
+      },
+    },
     card: {
       divide: "",
       header: {

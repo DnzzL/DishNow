@@ -29,15 +29,13 @@
             autocomplete="current-password"
           />
         </div>
-        <button class="btn btn-primary w-full text-white" type="submit">
-          Se connecter
-        </button>
+        <div class="flex justify-center">
+          <UButton label="Se connecter" variant="solid" type="submit" />
+        </div>
       </form>
       <div class="mt-4 text-sm text-center text-neutral">
         Pas encore de compte?
-        <NuxtLink
-          href="/signup"
-          class="text-accent font-semibold hover:text-accent-dark"
+        <NuxtLink href="/signup" class="text-malachite-600 font-semibold"
           >S'enregistrer</NuxtLink
         >
       </div>
