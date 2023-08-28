@@ -13,7 +13,7 @@
   </form>
   <div
     class="mt-2 px-2 py-2 gap-1 flex flex-wrap rounded-lg bg-persian-indigo-200"
-    v-if="tags.length > 0"
+    v-if="tags?.length > 0"
   >
     <UBadge v-for="(tag, index) in tags" :key="index">
       {{ tag }}

@@ -1,5 +1,8 @@
 <template>
-  <div class="grid place-items-center gap-1">
+  <form
+    @submit.prevent="handleDishCreation"
+    class="grid place-items-center gap-1"
+  >
     <h1 class="text-4xl">Nouveau plat</h1>
     <div class="flex">
       <input
@@ -8,6 +11,7 @@
         list="suggestions"
         class="input input-bordered"
         v-model="searchQuery"
+        required
       />
       <datalist v-if="suggestions" id="suggestions">
         <option v-for="{ id, title } in suggestions" :key="id">
@@ -22,58 +26,57 @@
         class="object-cover rounded h-28"
       />
     </figure>
-    <form @submit.prevent="handleDishCreation">
-      <label for="title" class="label">Title</label>
-      <input
-        type="text"
-        id="title"
-        required
-        v-model="title"
-        class="input input-bordered"
-      />
-      <label for="description" class="label">Description</label>
-      <input
-        type="text"
-        id="description"
-        v-model="description"
-        class="input input-bordered"
-      />
-      <label for="img" class="label">Images</label>
-      <div class="flex flex-col w-full">
-        <ul v-if="numberFiles > 0">
-          <li v-for="(thumbnail, i) in media" :key="thumbnail.name">
-            <div class="flex justify-evenly items-center">
-              <p>{{ thumbnail.name }}</p>
-            </div>
-          </li>
-          <UButton
-            icon="i-tabler-trash-x"
-            size="sm"
-            variant="soft"
-            @click="media = undefined"
-          />
-        </ul>
-
-        <UploadBox
-          @files-changed="handleMediaChange"
-          :max-files="3"
-          v-if="numberFiles < 3"
+    <label for="title" class="label">Title</label>
+    <input
+      type="text"
+      id="title"
+      required
+      v-model="title"
+      class="input input-bordered"
+    />
+    <label for="description" class="label">Description</label>
+    <input
+      type="text"
+      id="description"
+      v-model="description"
+      class="input input-bordered"
+      required
+    />
+    <label for="img" class="label">Images</label>
+    <div class="flex flex-col w-full">
+      <ul v-if="numberFiles > 0">
+        <li v-for="(thumbnail, i) in media" :key="thumbnail.name">
+          <div class="flex justify-evenly items-center">
+            <p>{{ thumbnail.name }}</p>
+          </div>
+        </li>
+        <UButton
+          icon="i-tabler-trash-x"
+          size="sm"
+          variant="soft"
+          @click="media = undefined"
         />
-      </div>
-      <p v-if="numberFiles > 0" class="text-gray-500">
-        ({{ numberFiles }} / 3) files selected
-      </p>
-      <div class="flex justify-center my-4">
-        <UButton label="Sauvegarder" variant="solid" type="submit" />
-      </div>
-    </form>
-  </div>
+      </ul>
+
+      <UploadBox
+        @files-changed="handleMediaChange"
+        :max-files="3"
+        v-if="numberFiles < 3"
+      />
+    </div>
+    <p v-if="numberFiles > 0" class="text-gray-500">
+      ({{ numberFiles }} / 3) files selected
+    </p>
+    <div class="flex justify-center my-4">
+      <UButton label="Sauvegarder" variant="solid" type="submit" />
+    </div>
+  </form>
 </template>
 
 <script setup lang="ts">
 import type { DishesRecord, RecipesResponse } from "~/types/pocketbase";
 
-const { getImageUrl, getRecordList } = useDb();
+const { getRecordList } = useDb();
 
 const searchQuery = ref("");
 const title = ref("");

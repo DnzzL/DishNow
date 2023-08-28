@@ -1,14 +1,9 @@
 <template>
   <UCard class="w-full lg:w-1/2">
     <template #header>
-      <div class="flex items-center">
+      <div class="flex items-center gap-2">
         <NuxtLink :href="`/users/${comment.expand?.author.id}`">
-          <img
-            :src="avatarUrl"
-            id="avatar"
-            alt="Avatar"
-            class="w-8 h-8 rounded-full mr-2"
-          />
+          <UAvatar :src="avatarUrl" :alt="comment.expand?.author.name" />
         </NuxtLink>
         <div>
           <p>

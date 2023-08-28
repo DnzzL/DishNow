@@ -1,7 +1,6 @@
 <template>
   <section>
     <Navbar />
-    <CustomTagsInput />
     <div class="flex flex-col gap-6 lg:gap-12 py-4 lg:py-16">
       <UCard class="w-80 mx-auto">
         <template #default>
@@ -39,7 +38,6 @@
         <template #default>
           <UForm
             ref="form"
-            :validate="validate"
             :state="state"
             @submit.prevent="submit"
             class="flex flex-col gap-4"
@@ -54,7 +52,7 @@
               </UFormGroup>
             </div>
 
-            <UFormGroup label="Email" name="email">
+            <UFormGroup label="Email" name="email" class="w-1/2">
               <UInput v-model="state.email" :disabled="disabled" />
             </UFormGroup>
 
@@ -78,9 +76,8 @@
 import { ClientResponseError } from "pocketbase";
 import type { UsersResponse } from "~/types/pocketbase";
 
-const router = useRouter();
 const toast = useToast();
-const { getImageUrl, logout, updateRecord } = useDb();
+const { getImageUrl, updateRecord } = useDb();
 
 type Props = {
   user: UsersResponse;
@@ -94,7 +91,9 @@ const state = ref({
   email: props.user.email,
   bio: props.user.bio,
 });
+
 const form = ref();
+
 async function submit() {
   try {
     await form.value!.validate();

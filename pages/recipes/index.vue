@@ -33,6 +33,10 @@
 <script setup lang="ts">
 import { RecipesResponse, UsersResponse } from "~/types/pocketbase";
 
+type RecipeItem = RecipesResponse<{
+  author: UsersResponse;
+}>;
+
 const nuxtApp = useNuxtApp();
 
 const user = nuxtApp.$pb.authStore.model as unknown as UsersResponse;
@@ -41,10 +45,11 @@ const isOpen = ref(false);
 const { data: recipes } = await useAsyncData("recipes", async (nuxtApp) => {
   const records = (await nuxtApp!.$pb
     .collection("recipes")
-    .getFullList<RecipesResponse>({
+    .getFullList<RecipeItem>({
       sort: "-created",
+      expand: "author",
       filter: `author.id = '${user.id}'`,
-    })) as RecipesResponse[];
+    })) as RecipeItem[];
   return structuredClone(records);
 });
 

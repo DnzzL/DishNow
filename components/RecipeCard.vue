@@ -25,8 +25,14 @@
       </div>
     </NuxtLink>
     <div class="p-4">
-      <h3 class="font-bold text-lg mb-2">{{ props.recipe.title }}</h3>
-      <div class="mt-4 flex gap-2">
+      <div class="flex justify-between">
+        <h3 class="font-bold text-lg">{{ props.recipe.title }}</h3>
+        <div class="flex items-center gap-1">
+          <p>{{ recipe.expand?.author.username }}</p>
+          <UAvatar :src="avatarUrl" :alt="recipe.expand?.author.name" />
+        </div>
+      </div>
+      <div class="mt-2 flex gap-1">
         <UBadge
           :label="`${recipe.servings} personnes`"
           variant="soft"
@@ -43,9 +49,18 @@
 </template>
 
 <script setup lang="ts">
-import type { RecipesResponse } from "~/types/pocketbase";
+import type { RecipesResponse, UsersResponse } from "~/types/pocketbase";
+
+const { getImageUrl } = useDb();
 
 const props = defineProps<{
-  recipe: RecipesResponse;
+  recipe: RecipesResponse<{
+    author: UsersResponse;
+  }>;
 }>();
+
+const avatarUrl = await getImageUrl(
+  props.recipe.expand?.author,
+  props.recipe.expand?.author.avatar
+);
 </script>
