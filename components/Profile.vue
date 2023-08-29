@@ -43,18 +43,12 @@
             @submit.prevent="submit"
             class="flex flex-col gap-4"
           >
-            <div class="grid grid-cols-2 gap-4">
-              <UFormGroup label="Nom" name="name">
-                <UInput v-model="state.name" :disabled="disabled" />
-              </UFormGroup>
+            <UFormGroup label="Nom utilisateur" name="username">
+              <UInput v-model="state.username" :disabled="disabled" />
+            </UFormGroup>
 
-              <UFormGroup label="Nom utilisateur" name="username">
-                <UInput v-model="state.username" :disabled="disabled" />
-              </UFormGroup>
-            </div>
-
-            <UFormGroup label="Email" name="email" class="w-1/2">
-              <UInput v-model="state.email" :disabled="disabled" />
+            <UFormGroup label="Email" name="email">
+              <UInput v-model="state.email" type="email" :disabled="disabled" />
             </UFormGroup>
 
             <UFormGroup label="Bio" name="bio">
@@ -87,7 +81,6 @@ const props = defineProps<Props>();
 
 const disabled = ref(true);
 const state = ref({
-  name: props.user.name,
   username: props.user.username,
   email: props.user.email,
   bio: props.user.bio,
@@ -119,16 +112,6 @@ async function updateAvatar(event: any) {
 }
 
 async function submit() {
-  try {
-    await form.value!.validate();
-  } catch (e) {
-    toast.add({
-      title: "Donnée non validate",
-      description: "Veuillez vérifier vos données.",
-      icon: "i-tabler-alert-circle",
-      color: "red",
-    });
-  }
   try {
     await updateRecord("users", props.user.id, state.value);
     toast.add({

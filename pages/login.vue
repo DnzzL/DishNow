@@ -2,37 +2,25 @@
   <div class="flex flex-col items-center justify-center h-screen bg-base-100">
     <div class="w-full max-w-md p-6 rounded-lg shadow-md bg-white">
       <h2 class="text-3xl font-bold text-neutral mb-6 font-cal">Connexion</h2>
-      <form class="space-y-6" @submit.prevent="handleSubmit">
-        <div class="form-control">
-          <label class="label" for="username">Nom d'utilisateur</label>
-          <input
-            class="input input-bordered w-full"
-            id="username"
-            name="username"
-            type="text"
-            placeholder="Username"
-            v-model="username"
-            required
-            autocomplete="username"
-          />
+      <UForm
+        ref="form"
+        :schema="schema"
+        :state="state"
+        @submit.prevent="handleSubmit"
+        class="flex flex-col gap-4"
+      >
+        <UFormGroup label="Nom utilisateur" name="username">
+          <UInput v-model="state.username" />
+        </UFormGroup>
+
+        <UFormGroup label="Mot de passe" name="password">
+          <UInput v-model="state.password" />
+        </UFormGroup>
+
+        <div class="flex justify-center py-4">
+          <UButton variant="solid" type="submit">Se connecter</UButton>
         </div>
-        <div class="form-control">
-          <label class="label" for="password">Mot de passe</label>
-          <input
-            class="input input-bordered w-full"
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Password"
-            v-model="password"
-            required
-            autocomplete="current-password"
-          />
-        </div>
-        <div class="flex justify-center">
-          <UButton label="Se connecter" variant="solid" type="submit" />
-        </div>
-      </form>
+      </UForm>
       <div class="mt-4 text-sm text-center text-neutral">
         Pas encore de compte?
         <NuxtLink href="/signup" class="text-malachite-600 font-semibold"
@@ -49,17 +37,27 @@ definePageMeta({
 });
 
 import { ClientResponseError } from "pocketbase";
+import { z } from "zod";
 
 const router = useRouter();
 const toast = useToast();
 const { login } = useDb();
 
-const username = ref("");
-const password = ref("");
+const schema = z.object({
+  username: z.string().min(3, "Minimum 3 caractères"),
+  password: z.string().min(8, "Must be at least 8 characters"),
+});
+
+const state = ref({
+  username: "",
+  password: "",
+});
+
+const form = ref();
 
 async function handleSubmit() {
   try {
-    await login({ username: username.value, password: password.value });
+    await login(state.value);
     router.push("/");
   } catch (error) {
     if (error instanceof ClientResponseError) {

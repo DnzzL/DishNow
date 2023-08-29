@@ -14,12 +14,14 @@ specifiers:
   pocketbase: ^0.16.0
   pocketbase-typegen: ^1.1.12
   xstate: ^4.38.2
+  zod: ^3.22.2
 
 dependencies:
   '@xstate/vue': 2.0.0_xstate@4.38.2
   cheerio: 1.0.0-rc.12
   pocketbase: 0.16.0
   xstate: 4.38.2
+  zod: 3.22.2
 
 devDependencies:
   '@iconify-json/tabler': 1.1.87
@@ -8182,3 +8184,7 @@ packages:
       compress-commons: 4.1.1
       readable-stream: 3.6.2
     dev: true
+
+  /zod/3.22.2:
+    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+    dev: false

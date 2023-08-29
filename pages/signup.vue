@@ -2,65 +2,35 @@
   <div class="flex flex-col items-center justify-center h-screen bg-base-100">
     <div class="w-full max-w-md p-6 rounded-lg shadow-md bg-white">
       <h2 class="text-3xl font-bold text-neutral mb-6 font-cal">
-        Enregistrement
+        Créer un compte
       </h2>
-      <form class="space-y-6" @submit.prevent="handleSubmit">
-        <div class="form-control">
-          <label class="label" for="name">Nom</label>
-          <input
-            class="input input-bordered w-full"
-            id="name"
-            name="name"
-            v-model="fname"
-            type="text"
-            placeholder="Name"
-            required
-            autocomplete="name"
-          />
+      <UForm
+        ref="form"
+        :schema="schema"
+        :state="state"
+        @submit.prevent="handleSubmit"
+        class="flex flex-col gap-4"
+      >
+        <UFormGroup label="Nom utilisateur" name="username">
+          <UInput v-model="state.username" />
+        </UFormGroup>
+
+        <UFormGroup label="Email" name="email">
+          <UInput v-model="state.email" />
+        </UFormGroup>
+
+        <UFormGroup label="Mot de passe" name="password">
+          <UInput v-model="state.password" type="password" />
+        </UFormGroup>
+
+        <UFormGroup label="Confirmation" name="passwordConfirm">
+          <UInput v-model="state.passwordConfirm" type="password" />
+        </UFormGroup>
+
+        <div class="flex justify-center py-4">
+          <UButton variant="solid" type="submit">M'enregistrer</UButton>
         </div>
-        <div class="form-control">
-          <label class="label" for="username">Nom utilisateur</label>
-          <input
-            class="input input-bordered w-full"
-            id="username"
-            name="username"
-            v-model="username"
-            type="text"
-            placeholder="Username"
-            required
-            autocomplete="username"
-          />
-        </div>
-        <div class="form-control">
-          <label class="label" for="password">Mot de passe</label>
-          <input
-            class="input input-bordered w-full"
-            id="password"
-            name="password"
-            v-model="password"
-            type="password"
-            placeholder="Password"
-            required
-            autocomplete="new-password"
-          />
-        </div>
-        <div class="form-control">
-          <label class="label" for="password">Confirmation mot de passe</label>
-          <input
-            class="input input-bordered w-full"
-            id="confirmPassword"
-            name="confirmPassword"
-            v-model="passwordConfirm"
-            type="password"
-            placeholder="Confirm Password"
-            required
-            autocomplete="new-password"
-          />
-        </div>
-        <div class="flex justify-center">
-          <UButton label="S'enregistrer" variant="solid" type="submit" />
-        </div>
-      </form>
+      </UForm>
       <div class="mt-4 text-sm text-center text-neutral">
         Déjà un compte ?
         <NuxtLink href="/login" class="text-malachite-600 font-semibold"
@@ -73,6 +43,7 @@
 
 <script setup lang="ts">
 import { ClientResponseError } from "pocketbase";
+import { z } from "zod";
 
 definePageMeta({
   layout: "unlogged",
@@ -82,19 +53,26 @@ const router = useRouter();
 const toast = useToast();
 const { signup } = useDb();
 
-const username = ref("");
-const fname = ref("");
-const password = ref("");
-const passwordConfirm = ref("");
+const schema = z.object({
+  username: z.string().min(3, "Minimum 3 caractères"),
+  name: z.string().min(2, "Minimum 2 caractères"),
+  email: z.string().email("Email invalide"),
+  password: z.string().min(8, "Must be at least 8 characters"),
+});
+
+const state = ref({
+  username: "",
+  name: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+});
+
+const form = ref();
 
 async function handleSubmit() {
   try {
-    await signup({
-      username: username.value,
-      password: password.value,
-      passwordConfirm: passwordConfirm.value,
-      name: fname.value,
-    });
+    await signup(state.value);
     toast.add({
       title: "Compte créé",
       description: "Vous pouvez maintenant vous connecter",

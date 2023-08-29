@@ -45,7 +45,7 @@ export type CommentsRecord = {
 }
 
 export type DishesRecord = {
-	recipe?: RecordIdString
+	recipe: RecordIdString
 	author?: RecordIdString
 	title: string
 	description?: string
@@ -100,7 +100,6 @@ export type TagsRecord = {
 }
 
 export type UsersRecord = {
-	name?: string
 	avatar?: string
 	bio?: string
 	private?: boolean
@@ -109,13 +108,13 @@ export type UsersRecord = {
 // Response types include system fields and match responses from the PocketBase API
 export type CommentsResponse<Texpand = unknown> = Required<CommentsRecord> & BaseSystemFields<Texpand>
 export type DishesResponse<Texpand = unknown> = Required<DishesRecord> & BaseSystemFields<Texpand>
-export type IngredientsResponse = Required<IngredientsRecord> & BaseSystemFields
-export type InstructionsResponse = Required<InstructionsRecord> & BaseSystemFields
+export type IngredientsResponse<Texpand = unknown> = Required<IngredientsRecord> & BaseSystemFields<Texpand>
+export type InstructionsResponse<Texpand = unknown> = Required<InstructionsRecord> & BaseSystemFields<Texpand>
 export type LikesResponse<Texpand = unknown> = Required<LikesRecord> & BaseSystemFields<Texpand>
 export type RatingsResponse<Texpand = unknown> = Required<RatingsRecord> & BaseSystemFields<Texpand>
 export type RecipesResponse<Texpand = unknown> = Required<RecipesRecord> & BaseSystemFields<Texpand>
-export type TagsResponse = Required<TagsRecord> & BaseSystemFields
-export type UsersResponse = Required<UsersRecord> & AuthSystemFields
+export type TagsResponse<Texpand = unknown> = Required<TagsRecord> & BaseSystemFields<Texpand>
+export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 

@@ -24,6 +24,7 @@
     "@xstate/vue": "^2.0.0",
     "cheerio": "1.0.0-rc.12",
     "pocketbase": "^0.16.0",
-    "xstate": "^4.38.2"
+    "xstate": "^4.38.2",
+    "zod": "^3.22.2"
   }
 }
