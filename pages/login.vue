@@ -14,7 +14,7 @@
         </UFormGroup>
 
         <UFormGroup label="Mot de passe" name="password">
-          <UInput v-model="state.password" />
+          <UInput v-model="state.password" type="password"/>
         </UFormGroup>
 
         <div class="flex justify-center py-4">
