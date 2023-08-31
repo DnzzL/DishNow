@@ -30,21 +30,21 @@ export function useDb() {
 
   async function signup({
     username,
+    email,
     password,
     passwordConfirm,
-    name,
   }: {
     username: string;
+    email: string;
     password: string;
     passwordConfirm: string;
-    name: string;
   }) {
     try {
       const data = {
         username,
+        email,
         password,
         passwordConfirm,
-        name,
       };
 
       await nuxtApp.$pb.collection("users").create<UsersResponse>(data);
@@ -159,7 +159,7 @@ export function useDb() {
   async function updateRecord<T>(
     collectionName: CollectionNames,
     recordId: string,
-    updatedRecord: CollectionRecords[CollectionNames]
+    updatedRecord: Partial<CollectionRecords[CollectionNames]>
   ) {
     const response = await nuxtApp.$pb
       .collection(collectionName)

@@ -9,7 +9,7 @@ export default defineNuxtPlugin(async () => {
     secure: true,
     sameSite: "strict",
     httpOnly: false, // change to "true" if you want only server-side access
-    maxAge: 1000,
+    maxAge: 50000,
   });
 
   // load the store data from the cookie value

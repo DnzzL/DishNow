@@ -7,7 +7,7 @@
           <div class="grid grid-cols-[1fr_2fr] px-4 py-2 gap-4">
             <UAvatar size="3xl" :src="avatarUrl" />
             <div class="flex flex-col justify-evenly">
-              <h1 class="font-cal text-3xl font-bold">{{ user.name }}</h1>
+              <h1 class="font-cal text-3xl font-bold">{{ user.username }}</h1>
               <div class="flex items-center">
                 <UButton variant="soft" label="Changer image" for="avatar" />
                 <label for="file-upload" class="custom-file-upload">
@@ -37,30 +37,11 @@
           </div>
         </template>
         <template #default>
-          <UForm
-            ref="form"
-            :state="state"
-            @submit.prevent="submit"
-            class="flex flex-col gap-4"
-          >
-            <UFormGroup label="Nom utilisateur" name="username">
-              <UInput v-model="state.username" :disabled="disabled" />
-            </UFormGroup>
-
-            <UFormGroup label="Email" name="email">
-              <UInput v-model="state.email" type="email" :disabled="disabled" />
-            </UFormGroup>
-
-            <UFormGroup label="Bio" name="bio">
-              <UTextarea v-model="state.bio" :disabled="disabled" />
-            </UFormGroup>
-
-            <div class="flex justify-center py-4">
-              <UButton variant="soft" type="submit" :disabled="disabled"
-                >Sauvegarder</UButton
-              >
-            </div>
-          </UForm>
+          <ProfileForm
+            variant="profile"
+            :disabled="disabled"
+            @submit="profileSubmit"
+          />
         </template>
       </UCard>
     </div>
@@ -69,8 +50,10 @@
 
 <script setup lang="ts">
 import { ClientResponseError } from "pocketbase";
+import { ProfileFormType } from "~/components/ProfileForm.vue";
 import type { UsersResponse } from "~/types/pocketbase";
 
+const nuxtApp = useNuxtApp();
 const toast = useToast();
 const { getImageUrl, updateRecord } = useDb();
 
@@ -80,13 +63,6 @@ type Props = {
 const props = defineProps<Props>();
 
 const disabled = ref(true);
-const state = ref({
-  username: props.user.username,
-  email: props.user.email,
-  bio: props.user.bio,
-});
-
-const form = ref();
 
 async function updateAvatar(event: any) {
   try {
@@ -111,14 +87,20 @@ async function updateAvatar(event: any) {
   }
 }
 
-async function submit() {
+async function profileSubmit(state: ProfileFormType) {
+  const payload = {
+    username: state.username,
+    email: state.email,
+    password: state.password,
+  };
   try {
-    await updateRecord("users", props.user.id, state.value);
+    await updateRecord("users", props.user.id, payload as any);
     toast.add({
       title: "Données mises à jour",
       icon: "i-tabler-circle-check",
       color: "green",
     });
+    await nuxtApp.$pb.collection("users").authRefresh();
   } catch (error) {
     if (error instanceof ClientResponseError) {
       toast.add({

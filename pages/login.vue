@@ -10,11 +10,15 @@
         class="flex flex-col gap-4"
       >
         <UFormGroup label="Nom utilisateur" name="username">
-          <UInput v-model="state.username" />
+          <UInput v-model="state.username" autocomplete="username" />
         </UFormGroup>
 
         <UFormGroup label="Mot de passe" name="password">
-          <UInput v-model="state.password" type="password"/>
+          <UInput
+            v-model="state.password"
+            type="password"
+            autocomplete="current-password"
+          />
         </UFormGroup>
 
         <div class="flex justify-center py-4">
