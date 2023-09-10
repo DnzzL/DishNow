@@ -3,15 +3,15 @@
     <template #header>
       <div class="flex items-center gap-2">
         <NuxtLink :href="`/users/${comment.expand?.author.id}`">
-          <UAvatar :src="avatarUrl" :alt="comment.expand?.author.name" />
+          <UAvatar :src="avatarUrl" :alt="comment.expand?.author.username" />
         </NuxtLink>
         <div>
           <p>
             <span class="text-gray-700 font-medium">{{
-              comment.expand?.author.name
+              comment.expand?.author.username
             }}</span>
             a commenté
-            <span class="font-medium"> {{ comment.expand?.dish.title }}</span>
+            <span class="font-medium"> {{ comment.expand?.dish?.title }}</span>
           </p>
         </div>
       </div>

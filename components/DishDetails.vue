@@ -1,20 +1,36 @@
 <template>
   <div class="p-6">
-    <h2 class="text-3xl font-medium">{{ dish.title }}</h2>
-    <div class="flex items-center space-x-2 mt-2">
-      <div class="flex items-center flex-col gap-2">
-        <span class="text-gray-600"
-          >{{ dish.expand?.recipe.servings }} servings</span
-        >
-        <span class="text-gray-600" v-if="tagContent?.length > 0"
-          >Tags: {{ tagContent }}</span
-        >
-        <RatingDisplay
-          :stars="dish.expand?.recipe.expand?.rating?.stars"
-          v-if="dish.expand?.recipe.expand?.rating?.stars"
-        />
-      </div>
+    <div class="flex justify-between">
+      <h2 class="text-3xl font-medium">
+        {{ dish.title }}
+      </h2>
+      <UButton
+        icon="i-tabler-edit"
+        label="Editer"
+        variant="soft"
+        @click="isOpen = true"
+        v-if="dish.expand?.author.id === nuxtApp.$pb.authStore.model?.id"
+      />
     </div>
+    <div class="flex items-center gap-2 mt-2">
+      <NuxtLink :href="`/users/${dish.expand?.author.id}`">
+        <UAvatar :src="avatarUrl" :alt="dish.expand?.author.username" />
+      </NuxtLink>
+      <p>
+        <span class="text-gray-700 font-medium">{{
+          dish.expand?.author.username
+        }}</span>
+        a cuisiné
+        <NuxtLink :href="`/recipes/${dish.expand?.recipe.id}`">
+          <span class="font-medium text-lg">{{
+            dish.expand?.recipe.title
+          }}</span>
+        </NuxtLink>
+      </p>
+    </div>
+    <p>
+      {{ dish.description }}
+    </p>
     <div class="mt-4">
       <div class="grid grid-cols-2 gap-4 mt-2">
         <p class="text-gray-600" v-if="dish.media.length === 0">
@@ -34,10 +50,10 @@
       </div>
     </div>
     <div class="mt-4">
-      <h3 class="text-lg font-medium">Comments:</h3>
-      <div class="mt-2">
+      <h3 class="text-lg font-medium">Commentaires:</h3>
+      <div class="flex flex-col gap-4 mt-2">
         <p class="text-gray-600" v-if="comments.length === 0">
-          No comments yet.
+          Pas encore de commentaire.
         </p>
         <CommentCard
           :comment="comment"
@@ -49,12 +65,18 @@
           <UButton
             icon="i-tabler-send"
             color="primary"
-            variant="soft"
+            variant="solid"
             type="submit"
           />
         </form>
       </div>
     </div>
+
+    <UModal v-model="isOpen">
+      <div class="py-4">
+        <DishForm :dish="dish" :is-editing="true" @done="handleDone" />
+      </div>
+    </UModal>
   </div>
 </template>
 
@@ -77,12 +99,19 @@ const toast = useToast();
 
 const props = defineProps<{
   dish: DishesResponse<{
-    recipe: RecipesResponse<{ tags: TagsResponse[]; rating: RatingsResponse }>;
+    recipe: RecipesResponse<{
+      tags: TagsResponse[];
+      rating: RatingsResponse;
+    }>;
+    author: UsersResponse;
   }>;
   comments: CommentsResponse<{ author: UsersResponse }>[];
 }>();
 
+console.log(useNuxtData("dishes"));
+
 const comment = ref("");
+const isOpen = ref(false);
 
 const tagContent = computed(() => {
   return props.dish.expand?.recipe.expand?.tags
@@ -90,7 +119,17 @@ const tagContent = computed(() => {
     .join(", ");
 });
 
+const avatarUrl = await getImageUrl(
+  props.dish.expand?.author,
+  props.dish.expand?.author.avatar
+);
+
 const mediaUrl = await getImageUrl(props.dish, props.dish.media[0]);
+
+async function handleDone() {
+  isOpen.value = false;
+  await refreshNuxtData("dishes");
+}
 
 async function save() {
   try {

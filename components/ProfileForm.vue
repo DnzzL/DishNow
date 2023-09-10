@@ -11,6 +11,7 @@
         v-model="state.username"
         autocomplete="username"
         :disabled="disabled"
+        :color="disabled ? 'gray' : 'white'"
       />
     </UFormGroup>
 
@@ -20,6 +21,7 @@
         type="email"
         autocomplete="email"
         :disabled="disabled"
+        :color="disabled ? 'gray' : 'white'"
       />
     </UFormGroup>
 
@@ -30,6 +32,7 @@
         type="password"
         autocomplete="new-password"
         :disabled="disabled"
+        :color="disabled ? 'gray' : 'white'"
       />
     </UFormGroup>
 
@@ -40,11 +43,12 @@
         type="password"
         autocomplete="new-password"
         :disabled="disabled"
+        :color="disabled ? 'gray' : 'white'"
       />
     </UFormGroup>
 
     <div class="flex justify-center py-4">
-      <UButton variant="solid" type="submit">{{
+      <UButton variant="solid" type="submit" :disabled="disabled">{{
         variant === "signup" ? "M'enregistrer" : "Changer"
       }}</UButton>
     </div>

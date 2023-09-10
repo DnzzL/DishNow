@@ -29,7 +29,7 @@
         <h3 class="font-bold text-lg">{{ props.recipe.title }}</h3>
         <div class="flex items-center gap-1">
           <p>{{ recipe.expand?.author.username }}</p>
-          <UAvatar :src="avatarUrl" :alt="recipe.expand?.author.name" />
+          <UAvatar :src="avatarUrl" :alt="recipe.expand?.author.username" />
         </div>
       </div>
       <div class="mt-2 flex gap-1">

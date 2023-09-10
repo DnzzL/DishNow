@@ -29,9 +29,8 @@
           <div class="flex justify-between">
             <h2 class="text-xl font-medium">Informations</h2>
             <UButton
-              icon="i-tabler-edit"
-              variant="soft"
-              color="gray"
+              :icon="disabled ? 'i-tabler-edit' : 'i-tabler-circle-x'"
+              label="Editer"
               @click="disabled = !disabled"
             />
           </div>

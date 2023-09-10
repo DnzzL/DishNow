@@ -3,7 +3,7 @@
     @submit.prevent="handleDishCreation"
     class="grid place-items-center gap-1"
   >
-    <h1 class="text-4xl">Nouveau plat</h1>
+    <h1 class="text-4xl">{{ isEditing ? "Modifier plat" : "Nouveau plat" }}</h1>
     <div class="flex">
       <input
         type="text"
@@ -74,7 +74,14 @@
 </template>
 
 <script setup lang="ts">
-import type { DishesRecord, RecipesResponse } from "~/types/pocketbase";
+import type {
+  DishesRecord,
+  DishesResponse,
+  RatingsResponse,
+  RecipesResponse,
+  TagsResponse,
+  UsersResponse,
+} from "~/types/pocketbase";
 
 const { getRecordList } = useDb();
 
@@ -85,8 +92,32 @@ const media = ref<FileList>();
 
 const nuxtApp = useNuxtApp();
 const toast = useToast();
-const { createRecord } = useDb();
+const { createRecord, updateRecord } = useDb();
 const { castAsFormData } = useForm();
+
+// define props so that the form can have initial values
+const props = withDefaults(
+  defineProps<{
+    dish?: DishesResponse<{
+      recipe: RecipesResponse<{
+        tags: TagsResponse[];
+        rating: RatingsResponse;
+      }>;
+      author: UsersResponse;
+    }>;
+    isEditing?: boolean;
+  }>(),
+  {
+    isEditing: false,
+  }
+);
+
+onMounted(() => {
+  searchQuery.value = props.dish?.expand?.recipe?.title ?? "";
+  title.value = props.dish?.title ?? "";
+  description.value = props.dish?.description ?? "";
+  media.value = props.dish?.media ?? undefined;
+});
 
 const emit = defineEmits<{
   (event: "done"): void;
@@ -134,14 +165,30 @@ async function handleDishCreation() {
 
     const formData = castAsFormData(dish) as unknown as DishesRecord;
 
-    const createdDish = await createRecord<RecipesResponse>("dishes", formData);
-    toast.add({
-      title: "Plat créé",
-      description: `Votre plat: ${createdDish.title} a bien été créée`,
-      icon: "-chef-hat",
-      color: "green",
-    });
-    emit("done");
+    if (props.isEditing) {
+      await updateRecord("dishes", props.dish?.id!, formData);
+      toast.add({
+        title: "Plat modifié",
+        description: `Votre plat: ${title.value} a bien été modifié`,
+        icon: "i-tabler-chef-hat",
+        color: "green",
+      });
+      emit("done");
+      return;
+    } else {
+      const createdDish = await createRecord<RecipesResponse>(
+        "dishes",
+        formData
+      );
+      toast.add({
+        title: "Plat créé",
+        description: `Votre plat: ${createdDish.title} a bien été créée`,
+        icon: "i-tabler-chef-hat",
+        color: "green",
+      });
+      emit("done");
+      return;
+    }
   } catch (err) {
     console.log(err);
   }

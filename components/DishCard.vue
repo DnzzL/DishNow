@@ -1,14 +1,14 @@
 <template>
   <UCard class="w-full lg:w-1/2">
     <template #header>
-      <div class="flex items-center">
+      <div class="flex items-center gap-2">
         <NuxtLink :href="`/users/${dish.expand?.author.id}`">
-          <UAvatar :src="avatarUrl" :alt="dish.expand?.author.name" />
+          <UAvatar :src="avatarUrl" :alt="dish.expand?.author.username" />
         </NuxtLink>
         <div>
           <p>
             <span class="text-gray-700 font-medium">{{
-              dish.expand?.author.name
+              dish.expand?.author.username
             }}</span>
             a cuisiné
             <span class="font-medium">{{ dish.expand?.recipe.title }}</span>

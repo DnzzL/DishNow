@@ -25,10 +25,10 @@ interface TextareaProps {
 
 const props = withDefaults(defineProps<TextareaProps>(), {
   value: "",
-  label: "Your message",
+  label: "Votre message",
   rows: 4,
   custom: false,
-  placeholder: "Write your message here...",
+  placeholder: "Ecrivez votre message ici...",
 });
 
 const emit = defineEmits(["update:modelValue"]);

@@ -13,4 +13,7 @@ export default defineNuxtConfig({
   ui: {
     icons: ["tabler"],
   },
+  experimental: {
+    viewTransition: true,
+  },
 });

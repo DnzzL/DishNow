@@ -17,19 +17,23 @@ const route = useRoute();
 const id = route.params.id as string;
 
 type Dish = DishesResponse<{
-  recipe: RecipesResponse<{ tags: TagsResponse[]; rating: RatingsResponse }>;
+  author: UsersResponse;
+  recipe: RecipesResponse<{
+    tags: TagsResponse[];
+    rating: RatingsResponse;
+  }>;
 }>;
 
-const { data: dish } = await useAsyncData(async (nuxtApp) => {
+const { data: dish } = await useAsyncData(async () => {
   const records = (await getRecordById<Dish>("dishes", id, {
-    expand: "recipe",
+    expand: "recipe,author",
   })) as Dish;
   return structuredClone(records);
 });
 
 type Comment = CommentsResponse<{ author: UsersResponse }>;
 
-const { data: comments } = await useAsyncData(async (nuxtApp) => {
+const { data: comments } = await useAsyncData(async () => {
   const records = (await getRecordFullList<Comment>("comments", {
     filter: `dish.id = '${id}'`,
     expand: "author",

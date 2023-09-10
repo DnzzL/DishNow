@@ -3,12 +3,12 @@
     <template #header>
       <div class="flex items-center">
         <NuxtLink :href="`/users/${rating.expand?.author.id}`">
-          <UAvatar :src="avatarUrl" :alt="rating.expand?.author.name" />
+          <UAvatar :src="avatarUrl" :alt="rating.expand?.author.username" />
         </NuxtLink>
         <div>
           <p>
             <span class="text-gray-700 font-medium">{{
-              rating.expand?.author.name
+              rating.expand?.author.username
             }}</span>
             a noté
             <span class="font-medium"> {{ rating.expand?.recipe.title }}</span>
