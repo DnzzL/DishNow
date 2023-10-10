@@ -5,7 +5,7 @@
         <input
           type="text"
           id="steps"
-          @change="(event) => emit('itemChange', index - 1, event)"
+          @change="(event) => emit('itemChange', index, event)"
           list="suggestions"
           class="input input-bordered"
           :value="items[index - 1]"
