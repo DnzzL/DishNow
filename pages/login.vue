@@ -27,7 +27,7 @@
       </UForm>
       <div class="mt-4 text-sm text-center text-neutral">
         Pas encore de compte?
-        <NuxtLink href="/signup" class="text-malachite-600 font-semibold"
+        <NuxtLink href="/signup" class="text-jade-600 font-semibold"
           >S'enregistrer</NuxtLink
         >
       </div>

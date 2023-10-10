@@ -14,6 +14,10 @@
       <div class="space-y-4" v-if="feedItems?.length > 0">
         <div class="grid place-items-center" v-for="item in feedItems">
           <DishCard :dish="item.data" v-if="item.type === Collections.Dishes" />
+          <RecipeCard
+            :recipe="item.data"
+            v-else-if="item.type === Collections.Recipes"
+          />
           <CommentCard
             :comment="item.data"
             v-else-if="item.type === Collections.Comments"
@@ -53,7 +57,8 @@ type FeedItemType =
   | Collections.Dishes
   | Collections.Comments
   | Collections.Likes
-  | Collections.Ratings;
+  | Collections.Ratings
+  | Collections.Recipes;
 
 type DishItem = DishesResponse<{
   author: UsersResponse;
@@ -68,6 +73,7 @@ type RatingsItem = RatingsResponse<{
   author: UsersResponse;
   recipe: RecipesResponse;
 }>;
+type RecipeItem = RecipesResponse<{ author: UsersResponse }>;
 
 type FeedItem = {
   id: string;
@@ -75,6 +81,15 @@ type FeedItem = {
   data: any;
 };
 const isOpen = ref(false);
+
+const { data: recipes } = await useAsyncData("recipes", async (nuxtApp) => {
+  const records = (await nuxtApp!.$pb
+    .collection("recipes")
+    .getFullList<RecipeItem>({
+      expand: "author",
+    })) as RecipeItem[];
+  return structuredClone(records);
+});
 
 const { data: dishes } = await useAsyncData("dishes", async (nuxtApp) => {
   const records = (await nuxtApp!.$pb
@@ -114,6 +129,11 @@ const { data: ratings } = await useAsyncData("ratings", async (nuxtApp) => {
 
 const feedItems = computed(() => {
   return [
+    ...recipes.value!.map((recipe) => ({
+      id: recipe.id,
+      type: Collections.Recipes as FeedItemType,
+      data: recipe satisfies RecipesResponse,
+    })),
     ...dishes.value!.map((dish) => ({
       id: dish.id,
       type: Collections.Dishes as FeedItemType,

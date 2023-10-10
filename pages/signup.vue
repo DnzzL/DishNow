@@ -7,7 +7,7 @@
       <ProfileForm variant="signup" @submit="handleSubmit" />
       <div class="mt-4 text-sm text-center text-neutral">
         Déjà un compte ?
-        <NuxtLink href="/login" class="text-malachite-600 font-semibold"
+        <NuxtLink href="/login" class="text-jade-600 font-semibold"
           >Se connecter</NuxtLink
         >
       </div>

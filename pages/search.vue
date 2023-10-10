@@ -19,7 +19,7 @@
     </div>
     <div class="py-4" v-if="recipes && recipes?.length > 0">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <RecipeCard
+        <RecipeDisplayCard
           v-for="recipe in recipes?.slice(
             (page - 1) * pageSize,
             page * pageSize

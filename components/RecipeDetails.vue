@@ -27,6 +27,14 @@
             color="flamingo"
           />
         </div>
+        <div class="flex items-center space-x-2">
+          <UBadge
+            v-for="tag in recipe.expand?.tags"
+            :label="tag.text"
+            variant="soft"
+            color="jade"
+          />
+        </div>
         <div class="mt-2">
           <h3 class="text-xl font-medium">Ingredients:</h3>
           <ul class="list-disc list-inside">
@@ -73,12 +81,14 @@ import {
   IngredientsResponse,
   InstructionsResponse,
   RecipesResponse,
+  TagsResponse,
 } from "~/types/pocketbase";
 
 const props = defineProps<{
   recipe: RecipesResponse<{
     ingredients: IngredientsResponse[];
     instructions: InstructionsResponse[];
+    tags: TagsResponse[];
   }>;
 }>();
 

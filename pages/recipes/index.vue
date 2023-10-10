@@ -24,7 +24,7 @@
         :key="recipe.id"
         v-for="recipe in recipes"
       >
-        <RecipeCard :recipe="recipe" />
+        <RecipeDisplayCard :recipe="recipe" />
       </NuxtLink>
     </div>
   </main>
