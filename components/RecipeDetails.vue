@@ -7,7 +7,16 @@
           :src="recipe.thumbnailUrl ?? '/images/placeholder.png'"
           alt="Dish Image"
         />
-        <h2 class="text-4xl font-medium">{{ recipe.title }}</h2>
+        <div class="flex justify-between">
+          <h2 class="text-4xl font-medium">{{ recipe.title }}</h2>
+          <UButton
+            icon="i-tabler-edit"
+            label="Editer"
+            variant="soft"
+            @click="isOpen = true"
+            v-if="recipe.author === nuxtApp.$pb.authStore.model?.id"
+          />
+        </div>
         <NuxtLink :to="recipe.origin" target="_blank" v-if="recipe.origin">
           <UButton
             icon="i-tabler-external-link"
@@ -28,12 +37,7 @@
           />
         </div>
         <div class="flex items-center space-x-2">
-          <UBadge
-            v-for="tag in recipe.expand?.tags"
-            :label="tag.text"
-            variant="soft"
-            color="jade"
-          />
+          <CustomTagsInput :modelValue="tagTexts" :editable="false" />
         </div>
         <div class="mt-2">
           <h3 class="text-xl font-medium">Ingredients:</h3>
@@ -73,6 +77,12 @@
         </div>
       </div>
     </div>
+
+    <UModal v-model="isOpen">
+      <div class="py-4">
+        <RecipeForm :recipe="recipe" :is-editing="true" @done="handleDone" />
+      </div>
+    </UModal>
   </section>
 </template>
 
@@ -84,6 +94,8 @@ import {
   TagsResponse,
 } from "~/types/pocketbase";
 
+const nuxtApp = useNuxtApp();
+
 const props = defineProps<{
   recipe: RecipesResponse<{
     ingredients: IngredientsResponse[];
@@ -92,5 +104,16 @@ const props = defineProps<{
   }>;
 }>();
 
+const isOpen = ref(false);
+
+const tagTexts = computed(
+  () => props.recipe.expand?.tags?.map((tag) => tag.text) ?? []
+);
+
 const timeInMinutes = Math.round(props.recipe.totalTime / 60);
+
+async function handleDone() {
+  isOpen.value = false;
+  await refreshNuxtData("recipes");
+}
 </script>
