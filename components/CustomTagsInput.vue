@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submit">
+  <form @submit.prevent="submit" v-if="editable">
     <div
       class="flex flex-col items-center mt-1 text-sm sm:flex-row sm:space-y-0 sm:space-x-4"
     >
@@ -18,6 +18,7 @@
     <UBadge v-for="(tag, index) in tags" :key="index">
       {{ tag }}
       <UIcon
+        v-if="editable"
         name="i-tabler-x"
         class="ml-1 cursor-pointer hover:text-gray-300"
         @click="tags.splice(index, 1)"
@@ -29,9 +30,15 @@
 <script setup lang="ts">
 const input = ref("");
 
-const props = defineProps<{
-  modelValue: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    modelValue: string[];
+    editable?: boolean;
+  }>(),
+  {
+    editable: true,
+  }
+);
 const emit = defineEmits(["update:modelValue"]);
 
 const tags = useVModel(props, "modelValue", emit);
