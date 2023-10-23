@@ -45,12 +45,12 @@
 <script setup lang="ts">
 import {
   Collections,
-  CommentsResponse,
-  DishesResponse,
-  LikesResponse,
-  RatingsResponse,
-  RecipesResponse,
-  UsersResponse,
+  type CommentsResponse,
+  type DishesResponse,
+  type LikesResponse,
+  type RatingsResponse,
+  type RecipesResponse,
+  type UsersResponse,
 } from "~/types/pocketbase";
 
 type FeedItemType =

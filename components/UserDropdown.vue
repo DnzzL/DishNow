@@ -4,7 +4,7 @@
     :ui="{ item: { disabled: 'cursor-text select-text' } }"
     :popper="{ placement: 'bottom-start' }"
   >
-    <UAvatar :src="avatarUrl" :alt="user.name" />
+    <UAvatar :src="avatarUrl" :alt="user.username" />
 
     <template #account="{ item }">
       <div class="text-left">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { UsersResponse } from "~/types/pocketbase";
+import { type UsersResponse } from "~/types/pocketbase";
 
 const { getImageUrl, logout } = useDb();
 const toast = useToast();

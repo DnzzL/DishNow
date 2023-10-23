@@ -10,21 +10,23 @@
     "typegen": "pocketbase-typegen --db ./db/pb_data/data.db --out types/pocketbase.ts"
   },
   "devDependencies": {
-    "@iconify-json/tabler": "^1.1.87",
-    "@nuxt/devtools": "^0.8.0",
-    "@nuxthq/ui": "^2.7.0",
-    "@types/node": "^20.5.0",
-    "@vueuse/core": "^10.3.0",
-    "@vueuse/nuxt": "^10.3.0",
-    "daisyui": "^3.5.1",
+    "@iconify-json/tabler": "^1.1.95",
+    "@nuxt/devtools": "^0.8.5",
+    "@nuxt/ui": "^2.9.0",
+    "@types/node": "^20.8.7",
+    "@vueuse/core": "^10.5.0",
+    "@vueuse/nuxt": "^10.5.0",
+    "daisyui": "^3.9.3",
     "nuxt": "^3.6.5",
     "pocketbase-typegen": "^1.1.12"
   },
   "dependencies": {
+    "@xenova/transformers": "^2.7.0",
     "@xstate/vue": "^2.0.0",
     "cheerio": "1.0.0-rc.12",
+    "onnxruntime-node": "^1.16.1",
     "pocketbase": "^0.16.0",
     "xstate": "^4.38.2",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   }
 }

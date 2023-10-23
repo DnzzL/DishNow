@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { UsersResponse } from "~/types/pocketbase";
+import type { UsersResponse } from "~/types/pocketbase";
 
 const nuxtApp = useNuxtApp();
 

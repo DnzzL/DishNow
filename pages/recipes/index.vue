@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { RecipesResponse, UsersResponse } from "~/types/pocketbase";
+import type { RecipesResponse, UsersResponse } from "~/types/pocketbase";
 
 type RecipeItem = RecipesResponse<{
   author: UsersResponse;
