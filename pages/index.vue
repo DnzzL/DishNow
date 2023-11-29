@@ -13,23 +13,23 @@
     <section class="mb-24 mt-2">
       <div class="space-y-4" v-if="feedItems?.length > 0">
         <div class="grid place-items-center" v-for="item in feedItems">
-          <DishCard :dish="item.data" v-if="item.type === Collections.Dishes" />
+          <DishCard
+            :dish="item.data"
+            :likes="likes?.filter((like) => like.dish === item.data.id) ?? []"
+            v-if="item.type === Collections.Dishes"
+          />
           <RecipeCard
             :recipe="item.data"
+            :favorites="
+              favorites?.filter(
+                (favorite) => favorite.recipe === item.data.id
+              ) ?? []
+            "
             v-else-if="item.type === Collections.Recipes"
           />
           <CommentCard
             :comment="item.data"
             v-else-if="item.type === Collections.Comments"
-          />
-          <LikeCard
-            :like="item.data"
-            v-else-if="item.type === Collections.Likes"
-          />
-
-          <RatingCard
-            :rating="item.data"
-            v-else-if="item.type === Collections.Ratings"
           />
         </div>
       </div>
@@ -47,8 +47,8 @@ import {
   Collections,
   type CommentsResponse,
   type DishesResponse,
+  type FavoritesResponse,
   type LikesResponse,
-  type RatingsResponse,
   type RecipesResponse,
   type UsersResponse,
 } from "~/types/pocketbase";
@@ -56,8 +56,6 @@ import {
 type FeedItemType =
   | Collections.Dishes
   | Collections.Comments
-  | Collections.Likes
-  | Collections.Ratings
   | Collections.Recipes;
 
 type DishItem = DishesResponse<{
@@ -67,11 +65,6 @@ type DishItem = DishesResponse<{
 type CommentItem = CommentsResponse<{
   author: UsersResponse;
   dish: DishesResponse;
-}>;
-type LikesItem = LikesResponse<{ author: UsersResponse }>;
-type RatingsItem = RatingsResponse<{
-  author: UsersResponse;
-  recipe: RecipesResponse;
 }>;
 type RecipeItem = RecipesResponse<{ author: UsersResponse }>;
 
@@ -110,20 +103,16 @@ const { data: comments } = await useAsyncData("comments", async (nuxtApp) => {
 });
 
 const { data: likes } = await useAsyncData("likes", async (nuxtApp) => {
-  const records = (await nuxtApp!.$pb
+  const records = await nuxtApp!.$pb
     .collection("likes")
-    .getFullList<LikesItem>({
-      expand: "author",
-    })) as LikesItem[];
+    .getFullList<LikesResponse>();
   return structuredClone(records);
 });
 
-const { data: ratings } = await useAsyncData("ratings", async (nuxtApp) => {
-  const records = (await nuxtApp!.$pb
-    .collection("ratings")
-    .getFullList<RatingsItem>({
-      expand: "author,recipe",
-    })) as RatingsItem[];
+const { data: favorites } = await useAsyncData("favorites", async (nuxtApp) => {
+  const records = await nuxtApp!.$pb
+    .collection("favorites")
+    .getFullList<FavoritesResponse>();
   return structuredClone(records);
 });
 
@@ -143,16 +132,6 @@ const feedItems = computed(() => {
       id: comment.id,
       type: Collections.Comments as FeedItemType,
       data: comment,
-    })),
-    ...likes.value!.map((like) => ({
-      id: like.id,
-      type: Collections.Likes as FeedItemType,
-      data: like,
-    })),
-    ...ratings.value!.map((rating) => ({
-      id: rating.id,
-      type: Collections.Ratings as FeedItemType,
-      data: rating,
     })),
   ].sort((a, b) => {
     return (

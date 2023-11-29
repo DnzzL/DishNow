@@ -85,9 +85,11 @@
       <CustomTagsInput v-model="recipeState.tags" />
     </UFormGroup>
     <div class="flex justify-center py-4">
-      <UButton variant="solid" type="submit">Créer</UButton>
+      <UButton variant="solid" type="submit">Ajouter une image</UButton>
     </div>
   </UForm>
+
+  <RecipeFormStepThree :fetched-thumbnail-url="''" />
 
   <!-- <div class="space-y-2" v-if="isLoading">
     <USkeleton class="h-4 w-[250px]" />
@@ -172,7 +174,6 @@ async function generateRecipe() {
 }
 
 async function handleInputFormSubmit() {
-  debugger;
   isLoading.value = true;
   if (
     ["generateFromTitle", "generateFromIngredients"].includes(

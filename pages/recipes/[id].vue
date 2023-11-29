@@ -1,5 +1,5 @@
 <template>
-  <RecipeDetails :recipe="recipe" v-if="recipe" class="mb-16" />
+  <RecipeDetails v-if="recipe" :recipe="recipe" class="mb-16" />
 </template>
 
 <script setup lang="ts">
@@ -21,9 +21,9 @@ type Recipe = RecipesResponse<{
 }>;
 
 const { data: recipe } = await useAsyncData(async (nuxtApp) => {
-  const records = (await getRecordById<Recipe>("recipes", id, {
+  const records = await getRecordById<Recipe>("recipes", id, {
     expand: "ingredients,instructions,tags",
-  })) as Recipe;
+  });
   return structuredClone(records);
 });
 </script>

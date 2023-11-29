@@ -17,11 +17,11 @@
     "@vueuse/core": "^10.5.0",
     "@vueuse/nuxt": "^10.5.0",
     "daisyui": "^3.9.3",
-    "nuxt": "^3.6.5",
+    "nuxt": "^3.8.0",
     "pocketbase-typegen": "^1.1.12"
   },
   "dependencies": {
-    "@xenova/transformers": "^2.7.0",
+    "@xenova/transformers": "^2.8.0",
     "@xstate/vue": "^2.0.0",
     "cheerio": "1.0.0-rc.12",
     "onnxruntime-node": "^1.16.1",
