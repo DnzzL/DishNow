@@ -77,20 +77,18 @@
 </template>
 
 <script setup lang="ts">
-import {
+import type {
   IngredientsResponse,
   InstructionsResponse,
   RecipesResponse,
   TagsResponse,
 } from "~/types/pocketbase";
 
-const props = defineProps<{
+defineProps<{
   recipe: RecipesResponse<{
     ingredients: IngredientsResponse[];
     instructions: InstructionsResponse[];
     tags: TagsResponse[];
   }>;
 }>();
-
-const timeInMinutes = Math.round(props.recipe.totalTime / 60);
 </script>

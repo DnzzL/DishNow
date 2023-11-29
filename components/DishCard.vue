@@ -49,7 +49,15 @@
       </div>
     </template>
     <template #footer>
-      <p class="text-xs text-gray-500">{{ dish.created }}</p>
+      <div class="flex items-center justify-between">
+        <p class="text-xs text-gray-500">{{ dish.created }}</p>
+        <UButton
+          :icon="isLiked ? 'i-tabler-thumb-up-filled' : 'i-tabler-thumb-up'"
+          variant="soft"
+          :label="likeCount"
+          @click="toggleLike"
+        />
+      </div>
     </template>
   </UCard>
 </template>
@@ -57,14 +65,17 @@
 <script setup lang="ts">
 import type {
   DishesResponse,
+  LikesResponse,
   RecipesResponse,
   UsersResponse,
 } from "~/types/pocketbase";
 
-const { getImageUrl } = useDb();
+const nuxtApp = useNuxtApp();
+const { getImageUrl, updateRecord, createRecord } = useDb();
 
 const props = defineProps<{
   dish: DishesResponse<{ author: UsersResponse; recipe: RecipesResponse }>;
+  likes: LikesResponse[];
 }>();
 
 const mediaUrl = await getImageUrl(props.dish, props.dish.media[0]);
@@ -72,4 +83,29 @@ const avatarUrl = await getImageUrl(
   props.dish.expand?.author,
   props.dish.expand?.author.avatar
 );
+
+const authorLike = computed(() => {
+  return props.likes?.find(
+    (like) => like.author === nuxtApp.$pb.authStore.model?.id
+  );
+});
+const isLiked = ref(authorLike.value?.like ?? false);
+const likeCount = ref(props.likes.filter((like) => like.like).length);
+
+async function toggleLike() {
+  if (authorLike.value) {
+    updateRecord("likes", authorLike.value.id, {
+      like: !authorLike.value.like,
+    });
+  } else {
+    await createRecord<LikesResponse>("likes", {
+      like: true,
+      dish: props.dish.id,
+      author: nuxtApp.$pb.authStore.model?.id!,
+    });
+  }
+  isLiked.value = !isLiked.value;
+  isLiked.value ? likeCount.value++ : likeCount.value--;
+  await refreshNuxtData("likes");
+}
 </script>

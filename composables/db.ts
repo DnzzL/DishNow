@@ -1,6 +1,6 @@
-import { RecordListQueryParams } from "pocketbase";
+import type { RecordListQueryParams } from "pocketbase";
 
-import {
+import type {
   CollectionRecords,
   IngredientsRecord,
   InstructionsRecord,

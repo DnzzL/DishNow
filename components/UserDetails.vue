@@ -8,7 +8,7 @@
           class="w-16 h-16 rounded-full"
         />
         <div>
-          <h2 class="text-3xl font-cal font-medium">{{ user.name }}</h2>
+          <h2 class="text-3xl font-cal font-medium">{{ user.username }}</h2>
           <div class="flex items-center space-x-2 mt-2">
             <i class="mdi mdi-email-outline text-gray-600"></i>
             <span class="text-gray-600">{{ user.email ?? "Pas de mail" }}</span>

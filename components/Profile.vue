@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { ClientResponseError } from "pocketbase";
-import { ProfileFormType } from "~/components/ProfileForm.vue";
+import type { ProfileFormType } from "~/components/ProfileForm.vue";
 import type { UsersResponse } from "~/types/pocketbase";
 
 const nuxtApp = useNuxtApp();

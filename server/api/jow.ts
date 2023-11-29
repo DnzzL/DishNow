@@ -19,8 +19,6 @@ export default defineEventHandler(async (event) => {
     .map((i, el) => $(el).text())
     .get();
 
-  console.log(ingredients);
-
   const servings = $(".jow_prod__sc-c531c030-2").find("option:selected").val();
   const preparationTime = $(
     ".jow_prod__sc-ba7286dc-0 > div:nth-child(1) > div > div > p:nth-child(1)"

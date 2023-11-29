@@ -7,7 +7,7 @@
           id="steps"
           @change="(event) => emit('itemChange', index, event)"
           list="suggestions"
-          class="input input-bordered"
+          class="input input-bordered w-full"
           :value="items[index - 1]"
         />
         <datalist v-if="suggestions" id="suggestions">

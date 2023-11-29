@@ -43,18 +43,32 @@
       </NuxtLink>
     </template>
     <template #footer>
-      <p class="text-xs text-gray-500">{{ recipe.created }}</p>
+      <div class="flex items-center justify-between">
+        <p class="text-xs text-gray-500">{{ recipe.created }}</p>
+        <UButton
+          :icon="isFavorite ? 'i-tabler-heart-filled' : 'i-tabler-heart'"
+          variant="soft"
+          :label="favoriteCount"
+          @click="toggleFavorite"
+        />
+      </div>
     </template>
   </UCard>
 </template>
 
 <script setup lang="ts">
-import type { RecipesResponse, UsersResponse } from "~/types/pocketbase";
+import type {
+  FavoritesResponse,
+  RecipesResponse,
+  UsersResponse,
+} from "~/types/pocketbase";
 
-const { getImageUrl } = useDb();
+const nuxtApp = useNuxtApp();
+const { getImageUrl, updateRecord, createRecord } = useDb();
 
 const props = defineProps<{
   recipe: RecipesResponse<{ author: UsersResponse }>;
+  favorites: FavoritesResponse[];
 }>();
 
 const mediaUrl = await getImageUrl(props.recipe, props.recipe.thumbnailUrl);
@@ -62,4 +76,31 @@ const avatarUrl = await getImageUrl(
   props.recipe.expand?.author,
   props.recipe.expand?.author.avatar
 );
+
+const authorFavorite = computed(() => {
+  return props.favorites?.find(
+    (favorite) => favorite.author === nuxtApp.$pb.authStore.model?.id
+  );
+});
+const isFavorite = ref(authorFavorite.value?.favorite ?? false);
+const favoriteCount = ref(
+  props.favorites.filter((favorite) => favorite.favorite).length
+);
+
+async function toggleFavorite() {
+  if (authorFavorite.value) {
+    updateRecord("favorites", authorFavorite.value.id, {
+      favorite: !authorFavorite.value.favorite,
+    });
+  } else {
+    await createRecord<FavoritesResponse>("favorites", {
+      favorite: true,
+      recipe: props.recipe.id,
+      author: nuxtApp.$pb.authStore.model?.id!,
+    });
+  }
+  isFavorite.value = !isFavorite.value;
+  isFavorite.value ? favoriteCount.value++ : favoriteCount.value--;
+  await refreshNuxtData("favorites");
+}
 </script>
