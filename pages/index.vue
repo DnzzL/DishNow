@@ -129,31 +129,31 @@ const { data: ratings } = await useAsyncData("ratings", async (nuxtApp) => {
 
 const feedItems = computed(() => {
   return [
-    ...recipes.value!.map((recipe) => ({
+    ...(recipes.value?.map((recipe) => ({
       id: recipe.id,
       type: Collections.Recipes as FeedItemType,
       data: recipe satisfies RecipesResponse,
-    })),
-    ...dishes.value!.map((dish) => ({
+    })) ?? []),
+    ...(dishes.value?.map((dish) => ({
       id: dish.id,
       type: Collections.Dishes as FeedItemType,
       data: dish satisfies DishesResponse,
-    })),
-    ...comments.value!.map((comment) => ({
+    })) ?? []),
+    ...(comments.value?.map((comment) => ({
       id: comment.id,
       type: Collections.Comments as FeedItemType,
       data: comment,
-    })),
-    ...likes.value!.map((like) => ({
+    })) ?? []),
+    ...(likes.value?.map((like) => ({
       id: like.id,
       type: Collections.Likes as FeedItemType,
       data: like,
-    })),
-    ...ratings.value!.map((rating) => ({
+    })) ?? []),
+    ...(ratings.value?.map((rating) => ({
       id: rating.id,
       type: Collections.Ratings as FeedItemType,
       data: rating,
-    })),
+    })) ?? []),
   ].sort((a, b) => {
     return (
       new Date(b.data.created).getTime() - new Date(a.data.created).getTime()
